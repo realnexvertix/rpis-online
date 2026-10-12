@@ -51,16 +51,16 @@ const RARITIES = {
 
 const ITEMS = {
   // === Обычный ящик ===
-  item_gray_ball: { id: 'item_gray_ball', name: 'Серый шар', display: '●',    rarity: 'common',   value: 10,   desc: '«Он круглый. Наверное.»' },
-  item_68:        { id: 'item_68',        name: '68',        display: '68',   rarity: 'uncommon', value: 68,   desc: '«Шестьдесят восемь. Что ещё сказать?»' },
-  item_1722:      { id: 'item_1722',      name: '1722',      display: '1722', rarity: 'rare',     value: 1722, desc: '«Тысяча семьсот двадцать два. Красиво.»' },
+  item_gray_ball: { id: 'item_gray_ball', name: 'Серый шар', display: '●',    rarity: 'common',   value: 5,   desc: '«Он круглый. Наверное.»' },
+  item_68:        { id: 'item_68',        name: '68',        display: '68',   rarity: 'uncommon', value: 10,  desc: '«Шестьдесят восемь. Что ещё сказать?»' },
+  item_1722:      { id: 'item_1722',      name: '1722',      display: '1722', rarity: 'rare',     value: 25,  desc: '«Тысяча семьсот двадцать два. Красиво.»' },
 
   // === ИИ-ящик ===
-  ai_dropout:     { id: 'ai_dropout',     name: 'Нейросеть-двоечник', display: 'AI?',  rarity: 'common',    value: 15,    desc: '«Обучалась на мемах.»' },
-  ai_prompts:     { id: 'ai_prompts',     name: 'Флешка с промптами', display: '512',  rarity: 'uncommon',  value: 250,   desc: '«Внутри 512 промптов. Все плохие.»' },
-  ai_cyber_brain: { id: 'ai_cyber_brain', name: 'Мозг-киборг',        display: 'CPU',  rarity: 'rare',      value: 3000,  desc: '«Работает на 3%. Оптимально.»' },
-  ai_quantum:     { id: 'ai_quantum',     name: 'Квантовый чип',      display: 'QBT',  rarity: 'legendary', value: 15000, desc: '«Считает быстрее, чем ты думаешь. То есть медленно.»' },
-  ai_eye:         { id: 'ai_eye',         name: 'Око ИИ',             display: 'EYE',  rarity: 'mythic',    value: 77777, desc: '«Оно видит всё. Оно не понимает ничего.»' }
+  ai_dropout:     { id: 'ai_dropout',     name: 'Нейросеть-двоечник', display: 'AI?',  rarity: 'common',    value: 10,  desc: '«Обучалась на мемах.»' },
+  ai_prompts:     { id: 'ai_prompts',     name: 'Флешка с промптами', display: '512',  rarity: 'uncommon',  value: 20,  desc: '«Внутри 512 промптов. Все плохие.»' },
+  ai_cyber_brain: { id: 'ai_cyber_brain', name: 'Мозг-киборг',        display: 'CPU',  rarity: 'rare',      value: 75,  desc: '«Работает на 3%. Оптимально.»' },
+  ai_quantum:     { id: 'ai_quantum',     name: 'Квантовый чип',      display: 'QBT',  rarity: 'legendary', value: 200, desc: '«Считает быстрее, чем ты думаешь. То есть медленно.»' },
+  ai_eye:         { id: 'ai_eye',         name: 'Око ИИ',             display: 'EYE',  rarity: 'mythic',    value: 600, desc: '«Оно видит всё. Оно не понимает ничего.»' }
 };
 
 const CRATES = {
