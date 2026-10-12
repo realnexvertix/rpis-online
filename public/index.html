@@ -69,24 +69,49 @@
     font-weight: 700; font-size: 15px; color: #fbbf24;
   }
 
+  /* ---------- СПИСОК ЯЩИКОВ ---------- */
+  .crate-list { display: flex; flex-direction: column; gap: 14px; }
+
   .crate-card {
     background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
-    padding: 22px 18px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 22px 18px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
   }
+  .crate-card::before {
+    content: ''; position: absolute; top: -60%; left: -60%;
+    width: 220%; height: 220%;
+    background: conic-gradient(from 0deg, transparent, rgba(167,139,250,0.12), transparent 30%);
+    animation: rotateGlow 6s linear infinite;
+    pointer-events: none;
+  }
+  .crate-card.ai-crate::before {
+    background: conic-gradient(from 0deg, transparent, rgba(56,189,248,0.18), transparent 30%);
+  }
+  @keyframes rotateGlow { to { transform: rotate(360deg); } }
+
   .crate-visual {
     font-size: 72px; line-height: 1; margin-bottom: 14px;
     filter: drop-shadow(0 0 24px rgba(167, 139, 250, 0.55));
     animation: float 3s ease-in-out infinite;
+    position: relative; z-index: 1;
   }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-  .crate-name { font-size: 19px; font-weight: 800; margin-bottom: 5px; }
-  .crate-desc { font-size: 12px; color: #7a7a9a; margin-bottom: 18px; }
+  .ai-crate .crate-visual { filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.7)); }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+  .crate-name { font-size: 19px; font-weight: 800; margin-bottom: 5px; position: relative; z-index: 1; }
+  .crate-desc { font-size: 12px; color: #7a7a9a; margin-bottom: 18px; position: relative; z-index: 1; }
 
   .btn {
     width: 100%; padding: 15px; border: none; border-radius: 13px;
     font-size: 15px; font-weight: 800; cursor: pointer;
     transition: transform 0.12s, opacity 0.2s; font-family: inherit;
+    position: relative; z-index: 1;
   }
   .btn:active:not(:disabled) { transform: scale(0.97); }
   .btn-open {
@@ -270,12 +295,7 @@
 
   <div class="view active" id="view-shop">
     <div class="balance">🪙 <span id="balance">0</span></div>
-    <div class="crate-card">
-      <div class="crate-visual">📦</div>
-      <div class="crate-name">Обычный ящик</div>
-      <div class="crate-desc">Внутри что-то есть. Наверное.</div>
-      <button class="btn btn-open" id="openBtn" onclick="openCrate()">Открыть — 100 🪙</button>
-    </div>
+    <div class="crate-list" id="crateList"></div>
   </div>
 
   <div class="view" id="view-earn">
@@ -403,8 +423,29 @@ function updateUI() {
   document.getElementById('balance').textContent = u.balance;
   document.getElementById('balance2').textContent = u.balance;
   document.getElementById('totalEarned').textContent = u.totalEarned;
-  document.getElementById('openBtn').disabled = u.balance < 100;
+
+  renderCrates();
   renderInventory();
+}
+
+function renderCrates() {
+  const list = document.getElementById('crateList');
+  const { CRATES } = state.gameData;
+
+  list.innerHTML = Object.values(CRATES).map(crate => {
+    const isAI = crate.id === 'ai_crate';
+    const canAfford = state.user.balance >= crate.price;
+    return `
+      <div class="crate-card ${isAI ? 'ai-crate' : ''}">
+        <div class="crate-visual">${isAI ? '🤖' : '📦'}</div>
+        <div class="crate-name">${crate.name}</div>
+        <div class="crate-desc">${crate.desc}</div>
+        <button class="btn btn-open" ${canAfford ? '' : 'disabled'}
+                onclick="openCrate('${crate.id}')">
+          Открыть — ${crate.price} 🪙
+        </button>
+      </div>`;
+  }).join('');
 }
 
 function renderInventory() {
@@ -426,7 +467,6 @@ function renderInventory() {
 
   grid.innerHTML = entries.map(([id, count]) => {
     const item = ITEMS[id];
-    const r = RARITIES[item.rarity];
     return `
       <div class="item-slot bg-${item.rarity}" onclick="showItem('${id}')">
         ${count > 1 ? `<div class="count-badge">×${count}</div>` : ''}
@@ -436,9 +476,9 @@ function renderInventory() {
 }
 
 /* ==================== ДЕЙСТВИЯ ==================== */
-async function openCrate() {
+async function openCrate(crateId) {
   try {
-    const data = await api('/api/open-crate', { method: 'POST', body: { crateId: 'common_crate' } });
+    const data = await api('/api/open-crate', { method: 'POST', body: { crateId } });
     state.user = data.user;
     updateUI();
     showDrop(data.item);
@@ -448,13 +488,13 @@ async function openCrate() {
 }
 
 async function handleClick(e) {
-  // Оптимистично накидываем локально, потом синхронизируем
+  // Оптимистично накидываем локально
   state.user.balance += 2;
   state.user.totalEarned += 2;
   document.getElementById('balance').textContent = state.user.balance;
   document.getElementById('balance2').textContent = state.user.balance;
   document.getElementById('totalEarned').textContent = state.user.totalEarned;
-  document.getElementById('openBtn').disabled = state.user.balance < 100;
+  renderCrates();
 
   spawnFloatCoin(e);
 
