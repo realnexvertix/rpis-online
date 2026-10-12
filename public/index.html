@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рандомные предметы слабоумия</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #0f0f1a 60%, #000 100%);
+    color: #e8e8f0; min-height: 100vh; overflow-x: hidden;
+  }
+  .app { max-width: 480px; margin: 0 auto; padding: 16px 16px 100px; }
+
+  .fs-btn {
+    position: fixed; top: 14px; right: 14px; z-index: 200;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: #e8e8f0; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  .fs-btn:active { transform: scale(0.92); }
+
+  header { text-align: center; padding: 18px 0 22px; padding-right: 44px; }
+  h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #f472b6, #fbbf24);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle { font-size: 11px; color: #6b6b8a; margin-top: 6px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .user-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: #8888a8; margin-bottom: 12px; padding: 0 4px;
+  }
+  .user-bar b { color: #a78bfa; }
+  .logout-btn {
+    background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.35);
+    color: #f87171; font-size: 11px; padding: 5px 10px; border-radius: 8px;
+    cursor: pointer; font-family: inherit; font-weight: 700;
+  }
+
+  .tabs {
+    display: flex; gap: 6px; background: rgba(255,255,255,0.04);
+    padding: 5px; border-radius: 14px; margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .tab {
+    flex: 1; padding: 11px 6px; text-align: center; font-size: 12px;
+    font-weight: 600; border-radius: 10px; cursor: pointer;
+    color: #8888a8; transition: all 0.2s; user-select: none;
+  }
+  .tab.active {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #fff; box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45);
+  }
+
+  .view { display: none; }
+  .view.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .balance {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 12px; padding: 10px 16px; margin-bottom: 18px;
+    font-weight: 700; font-size: 15px; color: #fbbf24;
+  }
+
+  .crate-card {
+    background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+    padding: 22px 18px; text-align: center;
+  }
+  .crate-visual {
+    font-size: 72px; line-height: 1; margin-bottom: 14px;
+    filter: drop-shadow(0 0 24px rgba(167, 139, 250, 0.55));
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .crate-name { font-size: 19px; font-weight: 800; margin-bottom: 5px; }
+  .crate-desc { font-size: 12px; color: #7a7a9a; margin-bottom: 18px; }
+
+  .btn {
+    width: 100%; padding: 15px; border: none; border-radius: 13px;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    transition: transform 0.12s, opacity 0.2s; font-family: inherit;
+  }
+  .btn:active:not(:disabled) { transform: scale(0.97); }
+  .btn-open {
+    background: linear-gradient(135deg, #7c3aed, #c026d3);
+    color: #fff; box-shadow: 0 6px 24px rgba(124, 58, 237, 0.5);
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
+
+  /* КЛИКЕР */
+  .clicker-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 10px 0; }
+  .clicker-info { text-align: center; font-size: 13px; color: #8888a8; line-height: 1.6; }
+  .clicker-info b { color: #fbbf24; font-size: 15px; }
+  .click-btn {
+    width: 220px; height: 220px; border-radius: 50%;
+    border: 3px solid rgba(251, 191, 36, 0.45);
+    background: radial-gradient(circle at 35% 30%, #fde68a 0%, #fbbf24 30%, #d97706 70%, #92400e 100%);
+    cursor: pointer; font-size: 90px; user-select: none;
+    box-shadow: 0 0 50px rgba(251, 191, 36, 0.45), 0 12px 30px rgba(0,0,0,0.5),
+                inset 0 -12px 25px rgba(0,0,0,0.35), inset 0 12px 25px rgba(255,255,255,0.35);
+    transition: transform 0.08s;
+  }
+  .click-btn:active { transform: scale(0.94); }
+
+  .float-coin {
+    position: fixed; font-size: 22px; font-weight: 900; color: #fbbf24;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 16px rgba(251,191,36,0.6);
+    pointer-events: none; z-index: 300;
+    animation: floatUp 0.9s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -90px) scale(1.4); }
+  }
+
+  /* ИНВЕНТАРЬ */
+  .inv-header { display: flex; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
+  .inv-title { font-size: 15px; font-weight: 700; }
+  .inv-count { font-size: 12px; color: #7a7a9a; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .item-slot {
+    aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center;
+    justify-content: center; cursor: pointer; position: relative; padding: 6px;
+    font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.15); transition: transform 0.15s, filter 0.2s;
+  }
+  .item-slot:active { transform: scale(0.94); }
+  .item-slot:hover { filter: brightness(1.15); }
+  .item-text { font-size: 26px; font-weight: 900; line-height: 1; text-align: center; word-break: break-word; }
+  .count-badge {
+    position: absolute; top: 5px; right: 6px;
+    background: rgba(0,0,0,0.55); font-size: 10px; font-weight: 800;
+    padding: 2px 6px; border-radius: 7px; text-shadow: none;
+  }
+
+  .bg-common    { background: linear-gradient(160deg, #9ca3af, #6b7280); }
+  .bg-uncommon  { background: linear-gradient(160deg, #38bdf8, #0284c7); }
+  .bg-rare      { background: linear-gradient(160deg, #f472b6, #be185d); }
+  .bg-legendary { background: linear-gradient(160deg, #fbbf24, #d97706); }
+  .bg-mythic    { background: linear-gradient(160deg, #ef4444, #991b1b); }
+
+  .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
+  .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+
+  /* МОДАЛКА */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+  .modal {
+    background: linear-gradient(160deg, #1e1e32, #14141f);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
+    padding: 28px 22px; text-align: center; max-width: 340px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  }
+  .modal-item-box {
+    width: 130px; height: 130px; border-radius: 22px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 54px; font-weight: 900; color: #fff;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes pop {
+    0% { transform: scale(0.2) rotate(-25deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(6deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .modal-rarity { font-size: 12px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .modal-name { font-size: 21px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+  .modal-desc { font-size: 12px; color: #8888a8; font-style: italic; margin-bottom: 20px; min-height: 16px; }
+  .btn-collect { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
+
+  .t-common    { color: #b8b8d0; }
+  .t-uncommon  { color: #38bdf8; }
+  .t-rare      { color: #f472b6; }
+  .t-legendary { color: #fbbf24; }
+  .t-mythic    { color: #ef4444; }
+
+  .detail-row {
+    display: flex; justify-content: space-between; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 13px;
+  }
+  .detail-row:last-of-type { border-bottom: none; }
+  .detail-label { color: #7a7a9a; }
+  .detail-value { font-weight: 700; }
+
+  /* АВТОРИЗАЦИЯ */
+  .auth-screen {
+    position: fixed; inset: 0; background: radial-gradient(circle at 50% 30%, #1a1a2e, #000);
+    display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px;
+  }
+  .auth-box {
+    background: linear-gradient(160deg, #1e1e32, #14141f);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
+    padding: 30px 24px; max-width: 380px; width: 100%;
+  }
+  .auth-box h2 {
+    font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px;
+    background: linear-gradient(135deg, #a78bfa, #f472b6);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .auth-box .auth-sub { font-size: 11px; color: #6b6b8a; text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; }
+  .auth-tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 12px; margin-bottom: 18px; }
+  .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; color: #8888a8; }
+  .auth-tab.active { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
+  .auth-input {
+    width: 100%; padding: 13px 15px; margin-bottom: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 11px; color: #fff; font-size: 14px; font-family: inherit;
+  }
+  .auth-input:focus { outline: none; border-color: #a855f7; }
+  .auth-error { color: #f87171; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 10px; }
+  .auth-submit {
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #7c3aed, #c026d3); color: #fff;
+    font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit;
+  }
+  .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- ЭКРАН АВТОРИЗАЦИИ -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-box">
+    <h2>Рандомные предметы слабоумия</h2>
+    <div class="auth-sub">онлайн</div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-mode="login">Вход</div>
+      <div class="auth-tab" data-mode="register">Регистрация</div>
+    </div>
+
+    <input class="auth-input" id="authName" placeholder="Имя" maxlength="20" autocomplete="username">
+    <input class="auth-input" id="authPass" type="password" placeholder="Пароль" autocomplete="current-password">
+    <div class="auth-error" id="authError"></div>
+    <button class="auth-submit" id="authSubmit">Войти</button>
+  </div>
+</div>
+
+<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+<div class="app" id="app" style="display:none">
+  <button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
+
+  <header>
+    <h1>РАНДОМНЫЕ ПРЕДМЕТЫ СЛАБОУМИЯ</h1>
+    <div class="subtitle">крути • тупей • коллекционируй</div>
+  </header>
+
+  <div class="user-bar">
+    <span>👤 <b id="username">—</b></span>
+    <button class="logout-btn" onclick="doLogout()">Выйти</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-view="shop">🛒 Магазин</div>
+    <div class="tab" data-view="earn">💰 Заработок</div>
+    <div class="tab" data-view="inv">🎒 Инвентарь</div>
+  </div>
+
+  <div class="view active" id="view-shop">
+    <div class="balance">🪙 <span id="balance">0</span></div>
+    <div class="crate-card">
+      <div class="crate-visual">📦</div>
+      <div class="crate-name">Обычный ящик</div>
+      <div class="crate-desc">Внутри что-то есть. Наверное.</div>
+      <button class="btn btn-open" id="openBtn" onclick="openCrate()">Открыть — 100 🪙</button>
+    </div>
+  </div>
+
+  <div class="view" id="view-earn">
+    <div class="balance">🪙 <span id="balance2">0</span></div>
+    <div class="clicker-wrap">
+      <div class="clicker-info">Жми на монету — получай <b>+2 🪙</b> за клик</div>
+      <button class="click-btn" id="clickBtn">🪙</button>
+      <div class="clicker-info">Всего заработано: <b id="totalEarned">0</b> 🪙</div>
+    </div>
+  </div>
+
+  <div class="view" id="view-inv">
+    <div class="inv-header">
+      <div class="inv-title">🎒 Твои предметы</div>
+      <div class="inv-count" id="invCount">0 шт.</div>
+    </div>
+    <div class="grid" id="invGrid"></div>
+  </div>
+</div>
+
+<!-- МОДАЛКА ВЫПАДЕНИЯ -->
+<div class="modal-overlay" id="dropModal">
+  <div class="modal">
+    <div class="modal-item-box" id="dropBox">?</div>
+    <div class="modal-rarity" id="dropRarity">Обычный</div>
+    <div class="modal-name" id="dropName">—</div>
+    <div class="modal-desc" id="dropDesc">—</div>
+    <button class="btn btn-collect" onclick="closeDrop()">Забрать</button>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПРЕДМЕТА -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <div class="modal-item-box" id="itemBox">?</div>
+    <div class="modal-rarity" id="itemRarity">Обычный</div>
+    <div class="modal-name" id="itemName">—</div>
+    <div class="modal-desc" id="itemDesc">—</div>
+    <div class="detail-row"><span class="detail-label">Стоимость</span><span class="detail-value" id="itemValue">—</span></div>
+    <div class="detail-row"><span class="detail-label">В инвентаре</span><span class="detail-value" id="itemCount">×0</span></div>
+    <button class="btn btn-collect" style="margin-top:16px" onclick="closeItem()">Закрыть</button>
+  </div>
+</div>
+
+<script>
+/* ==================== СОСТОЯНИЕ ==================== */
+let state = {
+  user: null,
+  gameData: null
+};
+
+/* ==================== API ==================== */
+async function api(path, options = {}) {
+  const res = await fetch(path, {
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+    body: options.body ? JSON.stringify(options.body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
+  return data;
+}
+
+/* ==================== АВТОРИЗАЦИЯ ==================== */
+let authMode = 'login';
+
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    authMode = tab.dataset.mode;
+    document.getElementById('authSubmit').textContent = authMode === 'login' ? 'Войти' : 'Создать аккаунт';
+    document.getElementById('authError').textContent = '';
+  });
+});
+
+document.getElementById('authSubmit').addEventListener('click', doAuth);
+document.getElementById('authPass').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
+document.getElementById('authName').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
+
+async function doAuth() {
+  const name = document.getElementById('authName').value.trim();
+  const pass = document.getElementById('authPass').value;
+  const errEl = document.getElementById('authError');
+  const btn = document.getElementById('authSubmit');
+
+  errEl.textContent = '';
+  if (!name || !pass) { errEl.textContent = 'Заполни оба поля'; return; }
+
+  btn.disabled = true;
+  try {
+    const path = authMode === 'login' ? '/api/login' : '/api/register';
+    const data = await api(path, { method: 'POST', body: { username: name, password: pass } });
+    state.user = data.user;
+    onLoggedIn();
+  } catch (e) {
+    errEl.textContent = e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function onLoggedIn() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadGameData().then(() => updateUI());
+}
+
+async function doLogout() {
+  await api('/api/logout', { method: 'POST' }).catch(() => {});
+  state.user = null;
+  location.reload();
+}
+
+/* ==================== ИГРОВЫЕ ДАННЫЕ ==================== */
+async function loadGameData() {
+  state.gameData = await api('/api/game-data');
+}
+
+/* ==================== UI ==================== */
+function updateUI() {
+  const u = state.user;
+  document.getElementById('username').textContent = u.username;
+  document.getElementById('balance').textContent = u.balance;
+  document.getElementById('balance2').textContent = u.balance;
+  document.getElementById('totalEarned').textContent = u.totalEarned;
+  document.getElementById('openBtn').disabled = u.balance < 100;
+  renderInventory();
+}
+
+function renderInventory() {
+  const grid = document.getElementById('invGrid');
+  const inv = state.user.inventory;
+  const entries = Object.entries(inv);
+
+  const total = entries.reduce((s, [, c]) => s + c, 0);
+  document.getElementById('invCount').textContent = `${total} шт.`;
+
+  if (entries.length === 0) {
+    grid.innerHTML = `<div class="empty-inv"><div class="big">🕳️</div>Пока пусто.<br>Открой ящик!</div>`;
+    return;
+  }
+
+  const { ITEMS, RARITIES } = state.gameData;
+  const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
+  entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
+
+  grid.innerHTML = entries.map(([id, count]) => {
+    const item = ITEMS[id];
+    const r = RARITIES[item.rarity];
+    return `
+      <div class="item-slot bg-${item.rarity}" onclick="showItem('${id}')">
+        ${count > 1 ? `<div class="count-badge">×${count}</div>` : ''}
+        <div class="item-text">${item.display}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ==================== ДЕЙСТВИЯ ==================== */
+async function openCrate() {
+  try {
+    const data = await api('/api/open-crate', { method: 'POST', body: { crateId: 'common_crate' } });
+    state.user = data.user;
+    updateUI();
+    showDrop(data.item);
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function handleClick(e) {
+  // Оптимистично накидываем локально, потом синхронизируем
+  state.user.balance += 2;
+  state.user.totalEarned += 2;
+  document.getElementById('balance').textContent = state.user.balance;
+  document.getElementById('balance2').textContent = state.user.balance;
+  document.getElementById('totalEarned').textContent = state.user.totalEarned;
+  document.getElementById('openBtn').disabled = state.user.balance < 100;
+
+  spawnFloatCoin(e);
+
+  try {
+    const data = await api('/api/click', { method: 'POST' });
+    state.user.balance = data.balance;
+    state.user.totalEarned = data.totalEarned;
+    updateUI();
+  } catch (err) {
+    console.warn('Клик не прошёл', err);
+  }
+}
+
+function spawnFloatCoin(e) {
+  const el = document.createElement('div');
+  el.className = 'float-coin';
+  el.textContent = '+2';
+  let x = e?.clientX, y = e?.clientY;
+  if (!x) {
+    const rect = document.getElementById('clickBtn').getBoundingClientRect();
+    x = rect.left + rect.width / 2;
+    y = rect.top + rect.height / 2;
+  }
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+
+/* ==================== МОДАЛКИ ==================== */
+function showDrop(item) {
+  const r = state.gameData.RARITIES[item.rarity];
+  const box = document.getElementById('dropBox');
+  box.className = 'modal-item-box bg-' + item.rarity;
+  box.textContent = item.display;
+
+  const rarityEl = document.getElementById('dropRarity');
+  rarityEl.textContent = r.name;
+  rarityEl.className = 'modal-rarity t-' + item.rarity;
+
+  document.getElementById('dropName').textContent = item.name;
+  document.getElementById('dropDesc').textContent = item.desc;
+  document.getElementById('dropModal').classList.add('show');
+}
+
+function closeDrop() {
+  document.getElementById('dropModal').classList.remove('show');
+}
+
+function showItem(id) {
+  const item = state.gameData.ITEMS[id];
+  const r = state.gameData.RARITIES[item.rarity];
+
+  const box = document.getElementById('itemBox');
+  box.className = 'modal-item-box bg-' + item.rarity;
+  box.textContent = item.display;
+
+  const rarityEl = document.getElementById('itemRarity');
+  rarityEl.textContent = r.name;
+  rarityEl.className = 'modal-rarity t-' + item.rarity;
+
+  document.getElementById('itemName').textContent = item.name;
+  document.getElementById('itemDesc').textContent = item.desc;
+  document.getElementById('itemValue').textContent = item.value + ' 🪙';
+  document.getElementById('itemCount').textContent = '×' + (state.user.inventory[id] || 0);
+  document.getElementById('itemModal').classList.add('show');
+}
+
+function closeItem() {
+  document.getElementById('itemModal').classList.remove('show');
+}
+
+/* ==================== ПОЛНЫЙ ЭКРАН ==================== */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+/* ==================== ВКЛАДКИ ==================== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+  });
+});
+
+document.getElementById('clickBtn').addEventListener('click', handleClick);
+
+/* ==================== СТАРТ ==================== */
+(async () => {
+  try {
+    const data = await api('/api/me');
+    state.user = data.user;
+    onLoggedIn();
+  } catch {
+    // не залогинен — показываем экран входа
+  }
+})();
+</script>
+</body>
+</html>
