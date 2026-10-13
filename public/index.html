@@ -1217,38 +1217,28 @@ async function loadLeaderboard() {
 </script><script>
 /* ==================== SOCKET.IO ==================== */
 let socket = null;
-let pendingRequest = null; // { requestId, fromId, fromName }
+let pendingRequest = null;
 
 function initSocket() {
   socket = io();
 
-  // Токен достаём из cookie через хак — сервер проверит его сам
-  // Но socket.io не отправляет cookie автоматически в auth payload.
-  // Поэтому — просим сервер отдать /api/me, а токен уже в httpOnly cookie,
-  // поэтому просто шлём socket без токена, а сервер сам не может проверить cookie.
-  // Решение: получаем токен отдельным запросом нельзя (httpOnly).
-  // Значит используем проксирование через express — socket.io middleware на сервере не имеет доступа к cookie.
-  // НО: socket.io с той же сессией шлёт cookie автоматически в handshake headers!
-  // Значит — аутентификацию делаем по handshake, а не по отдельному 'auth' event.
-  // Упрощаем: клиент шлёт токен как событие, сервер проверит.
+  // ✅ Сервер сам читает cookie при подключении — ничего отправлять не нужно
 
-  // Получаем токен — нет, httpOnly. Значит сервер при коннекте сам читает cookie.
-  // Но в server.js мы сделали auth через событие — передадим пустышку, а сервер
-  // и так всех принимает по onlineUsers. На самом деле это небезопасно, но для игры сойдёт.
-
-  // Правильнее: пусть сервер при подключении сам читает cookie из handshake.
-  // Но мы уже написали сервер с событием 'auth' по токену.
-  // Компромисс: пробуем отправить 'auth' с пустым токеном — сервер вернёт ошибку.
-  // Тогда в сервере надо поправить — читать cookie на handshake.
-
-  // Проще всего: послать свой userId через auth (сервер проверит что такой есть).
-  // Так как у нас нет CSRF-защиты, это ок.
   socket.on('connect', () => {
-    socket.emit('auth', { token: getCookie('token') });
+    console.log('🔌 Socket подключён:', socket.id);
   });
 
-  socket.on('auth-ok', () => { console.log('✅ Socket auth OK'); });
-  socket.on('auth-error', (d) => { console.warn('❌ Socket auth', d.error); });
+  socket.on('connect_error', (err) => {
+    console.warn('❌ Socket ошибка:', err.message);
+  });
+
+  socket.on('auth-ok', (data) => {
+    console.log('✅ Socket авторизован как', data.username);
+  });
+
+  socket.on('auth-error', (data) => {
+    console.warn('❌ Socket auth:', data.error);
+  });
 
   socket.on('online-changed', () => {
     if (document.getElementById('view-trade').classList.contains('active')) {
@@ -1287,24 +1277,14 @@ function initSocket() {
   });
 
   socket.on('trade-completed', () => {
+    alert('✅ Обмен завершён!');
     closeTradeModal();
   });
 
-  socket.on('inventory-updated', async (data) => {
+  socket.on('inventory-updated', (data) => {
     state.user = data.user;
     updateUI();
   });
-}
-
-// Достаём cookie — для JWT в httpOnly cookie не сработает.
-// Поэтому нужен другой способ: сервер при socket-коннекте должен сам читать cookie.
-// Но наш сервер написан под событие 'auth' с token. Значит — пока заглушка:
-function getCookie(name) {
-  // httpOnly cookie через JS не виден. Возвращаем null.
-  // Тогда сервер должен сам на handshake читать.
-  // См. правку сервера ниже.
-  const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return m ? m[2] : null;
 }
 
 /* ==================== ТРЕЙДЫ — UI ==================== */
@@ -1395,8 +1375,7 @@ function renderTradeModal() {
   const trade = state.currentTrade;
   if (!trade) return;
 
-  document.getElementById('tradeSubtitle').textContent =
-    `Ты ↔ ${trade.other.name}`;
+  document.getElementById('tradeSubtitle').textContent = `Ты ↔ ${trade.other.name}`;
   document.getElementById('tradeMineTitle').textContent = `🟢 Ты (${trade.me.name})`;
   document.getElementById('tradeOtherTitle').textContent = `🔴 ${trade.other.name}`;
 
@@ -1405,7 +1384,6 @@ function renderTradeModal() {
 
   renderTradeInventoryGrid();
 
-  // Статус
   const status = document.getElementById('tradeStatus');
   if (trade.me.confirmed && trade.other.confirmed) {
     status.textContent = '✅ Обмен...';
@@ -1555,6 +1533,10 @@ document.getElementById('itemModal').addEventListener('click', (e) => {
   if (e.target.id === 'itemModal') closeItem();
 });
 
+document.getElementById('tradeModal').addEventListener('click', (e) => {
+  if (e.target.id === 'tradeModal') cancelTrade();
+});
+
 /* ==================== СТАРТ ==================== */
 (async () => {
   try {
@@ -1562,7 +1544,7 @@ document.getElementById('itemModal').addEventListener('click', (e) => {
     state.user = data.user;
     onLoggedIn();
   } catch {
-    // не залогинен
+    // не залогинен — показываем экран входа
   }
 })();
 </script>
