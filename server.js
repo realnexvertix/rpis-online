@@ -92,18 +92,20 @@ const CLICK_REWARD = 2;
 
 const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: '30d' });
 
+function verifyToken(token) {
+  try { return jwt.verify(token, JWT_SECRET); }
+  catch { return null; }
+}
+
 async function auth(req, res, next) {
   const token = req.cookies?.token;
   if (!token) return res.status(401).json({ error: 'Не авторизован' });
-  try {
-    const { uid } = jwt.verify(token, JWT_SECRET);
-    const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [uid]);
-    if (!rows[0]) return res.status(401).json({ error: 'Не авторизован' });
-    req.user = rows[0];
-    next();
-  } catch {
-    res.status(401).json({ error: 'Не авторизован' });
-  }
+  const payload = verifyToken(token);
+  if (!payload) return res.status(401).json({ error: 'Не авторизован' });
+  const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [payload.uid]);
+  if (!rows[0]) return res.status(401).json({ error: 'Не авторизован' });
+  req.user = rows[0];
+  next();
 }
 
 async function packUser(user) {
@@ -131,7 +133,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ==================== АВТОРИЗАЦИЯ ==================== */
+/* ==================== АВТОРИЗАЦИЯ (HTTP) ==================== */
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -282,8 +284,6 @@ app.get('/api/leaderboard', auth, async (req, res) => {
   } catch (e) { console.error(e); res.status(500).json({ error: 'Ошибка сервера' }); }
 });
 
-/* ==================== ПОИСК ИГРОКА И ОНЛАЙН ==================== */
-
 app.get('/api/find-player/:username', auth, async (req, res) => {
   try {
     const name = req.params.username.trim();
@@ -316,32 +316,45 @@ const makeTradeId = () => 'tr_' + Math.random().toString(36).slice(2, 10) + Date
 const makeRequestId = () => 'rq_' + Math.random().toString(36).slice(2, 10);
 
 function emitTo(userId, event, data) {
-  const sid = onlineUsers.get(Number(userId)) || onlineUsers.get(userId);
+  const sid = onlineUsers.get(Number(userId));
   if (sid) io.to(sid).emit(event, data);
 }
 
-io.on('connection', (socket) => {
-  let currentUserId = null;
+// ✅ ГЛАВНОЕ ИЗМЕНЕНИЕ: читаем cookie на handshake
+io.use((socket, next) => {
+  try {
+    const rawCookie = socket.handshake.headers.cookie || '';
+    const cookies = Object.fromEntries(
+      rawCookie.split(';').map(c => {
+        const [k, ...v] = c.trim().split('=');
+        return [k, v.join('=')];
+      })
+    );
+    const token = cookies.token;
+    if (!token) return next(new Error('Нет токена'));
+    const payload = verifyToken(token);
+    if (!payload) return next(new Error('Неверный токен'));
+    socket.userId = Number(payload.uid);
+    next();
+  } catch (e) {
+    next(new Error('Ошибка авторизации'));
+  }
+});
 
-  socket.on('auth', async ({ token }) => {
-    try {
-      const { uid } = jwt.verify(token, JWT_SECRET);
-      const { rows } = await pool.query('SELECT id, username FROM users WHERE id = $1', [uid]);
-      if (!rows[0]) return socket.emit('auth-error', { error: 'Игрок не найден' });
+io.on('connection', async (socket) => {
+  const currentUserId = socket.userId;
 
-      currentUserId = Number(uid);
-      onlineUsers.set(currentUserId, socket.id);
+  // Проверяем что юзер существует
+  const { rows } = await pool.query('SELECT id, username FROM users WHERE id = $1', [currentUserId]);
+  if (!rows[0]) return socket.disconnect();
+  const myUsername = rows[0].username;
 
-      socket.emit('auth-ok', { username: rows[0].username });
-      io.emit('online-changed', { players: [...onlineUsers.keys()] });
-    } catch (e) {
-      socket.emit('auth-error', { error: 'Неверный токен' });
-    }
-  });
+  onlineUsers.set(currentUserId, socket.id);
+  socket.emit('auth-ok', { username: myUsername });
+  io.emit('online-changed', { players: [...onlineUsers.keys()] });
 
   /* ----- ЗАПРОС НА ТРЕЙД ----- */
   socket.on('trade-request', async ({ targetId }) => {
-    if (!currentUserId) return;
     targetId = Number(targetId);
     if (targetId === currentUserId) return;
     if (!onlineUsers.has(targetId)) {
@@ -351,31 +364,28 @@ io.on('connection', (socket) => {
       return socket.emit('trade-error', { error: 'У игрока уже есть запрос' });
     }
 
-    const { rows } = await pool.query('SELECT username FROM users WHERE id = $1', [currentUserId]);
     const requestId = makeRequestId();
-
     pendingRequests.set(targetId, {
       requestId,
       fromId: currentUserId,
-      fromName: rows[0].username
+      fromName: myUsername
     });
 
     emitTo(targetId, 'trade-request-received', {
       requestId,
       fromId: currentUserId,
-      fromName: rows[0].username
+      fromName: myUsername
     });
   });
 
   /* ----- ОТВЕТ НА ЗАПРОС ----- */
   socket.on('trade-respond', async ({ requestId, accept }) => {
-    if (!currentUserId) return;
     const req = pendingRequests.get(currentUserId);
     if (!req || req.requestId !== requestId) return;
     pendingRequests.delete(currentUserId);
 
     if (!accept) {
-      emitTo(req.fromId, 'trade-declined', { byName: req.fromName });
+      emitTo(req.fromId, 'trade-declined', { byName: myUsername });
       return;
     }
 
@@ -391,10 +401,10 @@ io.on('connection', (socket) => {
 
     const playerInfo = {};
     for (const pid of Object.keys(trade.players)) {
-      const { rows } = await pool.query('SELECT item_id, count FROM inventory WHERE user_id = $1', [pid]);
-      const inv = {};
-      for (const r of rows) inv[r.item_id] = r.count;
-      trade.players[pid].inventory = inv;
+      const inv = await pool.query('SELECT item_id, count FROM inventory WHERE user_id = $1', [pid]);
+      const invMap = {};
+      for (const r of inv.rows) invMap[r.item_id] = r.count;
+      trade.players[pid].inventory = invMap;
 
       const u = await pool.query('SELECT username FROM users WHERE id = $1', [pid]);
       playerInfo[pid] = u.rows[0].username;
@@ -407,7 +417,6 @@ io.on('connection', (socket) => {
 
   /* ----- ДОБАВИТЬ ПРЕДМЕТ ----- */
   socket.on('trade-add-item', async ({ tradeId, itemId }) => {
-    if (!currentUserId) return;
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
     const me = trade.players[currentUserId];
@@ -425,7 +434,6 @@ io.on('connection', (socket) => {
 
   /* ----- УБРАТЬ ПРЕДМЕТ ----- */
   socket.on('trade-remove-item', async ({ tradeId, itemId }) => {
-    if (!currentUserId) return;
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
     const me = trade.players[currentUserId];
@@ -443,7 +451,6 @@ io.on('connection', (socket) => {
 
   /* ----- ПОДТВЕРДИТЬ ----- */
   socket.on('trade-confirm', async ({ tradeId }) => {
-    if (!currentUserId) return;
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
 
@@ -475,7 +482,6 @@ io.on('connection', (socket) => {
 
   /* ----- ОТМЕНА ----- */
   socket.on('trade-cancel', ({ tradeId }) => {
-    if (!currentUserId) return;
     const trade = activeTrades.get(tradeId);
     if (!trade) return;
     for (const p of Object.values(trade.players)) {
@@ -486,7 +492,6 @@ io.on('connection', (socket) => {
 
   /* ----- ОТКЛЮЧЕНИЕ ----- */
   socket.on('disconnect', () => {
-    if (!currentUserId) return;
     onlineUsers.delete(currentUserId);
     pendingRequests.delete(currentUserId);
 
