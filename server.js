@@ -242,7 +242,6 @@ app.post('/api/open-crate', auth, async (req, res) => {
       return res.status(400).json({ error: 'Не хватает монет' });
     }
 
-    // Ролл
     const roll = Math.random() * 100;
     let acc = 0;
     let itemId = crate.drops[crate.drops.length - 1].item;
@@ -270,6 +269,94 @@ app.post('/api/open-crate', auth, async (req, res) => {
     res.status(500).json({ error: 'Ошибка сервера' });
   } finally {
     client.release();
+  }
+});
+
+/* ==================== ПРОДАЖА ПРЕДМЕТА ==================== */
+
+app.post('/api/sell-item', auth, async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const itemId = req.body?.itemId;
+    const item = ITEMS[itemId];
+    if (!item) return res.status(400).json({ error: 'Нет такого предмета' });
+
+    await client.query('BEGIN');
+
+    const { rows } = await client.query(
+      'SELECT count FROM inventory WHERE user_id = $1 AND item_id = $2 FOR UPDATE',
+      [req.user.id, itemId]
+    );
+    if (!rows[0] || rows[0].count <= 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Нет такого предмета в инвентаре' });
+    }
+
+    // Списываем 1 штуку
+    if (rows[0].count === 1) {
+      await client.query('DELETE FROM inventory WHERE user_id = $1 AND item_id = $2', [req.user.id, itemId]);
+    } else {
+      await client.query(
+        'UPDATE inventory SET count = count - 1 WHERE user_id = $1 AND item_id = $2',
+        [req.user.id, itemId]
+      );
+    }
+
+    // Начисляем монеты
+    await client.query(
+      'UPDATE users SET balance = balance + $1 WHERE id = $2',
+      [item.value, req.user.id]
+    );
+
+    await client.query('COMMIT');
+
+    const updated = (await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id])).rows[0];
+    res.json({
+      sold: item,
+      reward: item.value,
+      user: await packUser(updated)
+    });
+  } catch (e) {
+    await client.query('ROLLBACK');
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  } finally {
+    client.release();
+  }
+});
+
+/* ==================== ТОП ИГРОКОВ ==================== */
+
+app.get('/api/leaderboard', auth, async (req, res) => {
+  try {
+    // Тянем всех юзеров с их инвентарём
+    const { rows } = await pool.query(`
+      SELECT u.id, u.username, i.item_id, i.count
+      FROM users u
+      LEFT JOIN inventory i ON i.user_id = u.id
+    `);
+
+    // Группируем по игроку
+    const players = {};
+    for (const row of rows) {
+      if (!players[row.id]) {
+        players[row.id] = { id: row.id, username: row.username, totalValue: 0 };
+      }
+      if (row.item_id && ITEMS[row.item_id]) {
+        players[row.id].totalValue += ITEMS[row.item_id].value * row.count;
+      }
+    }
+
+    // Сортируем по стоимости инвентаря (убывание)
+    const sorted = Object.values(players)
+      .sort((a, b) => b.totalValue - a.totalValue)
+      .slice(0, 50)
+      .map((p, idx) => ({ ...p, rank: idx + 1 }));
+
+    res.json({ leaderboard: sorted, me: req.user.id });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
   }
 });
 
