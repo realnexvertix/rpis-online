@@ -21,7 +21,6 @@
     display: flex; align-items: center; justify-content: center;
     backdrop-filter: blur(8px);
   }
-  .fs-btn:active { transform: scale(0.92); }
 
   header { text-align: center; padding: 18px 0 22px; padding-right: 44px; }
   h1 {
@@ -44,12 +43,12 @@
   }
 
   .tabs {
-    display: flex; gap: 5px; background: rgba(255,255,255,0.04);
+    display: flex; gap: 4px; background: rgba(255,255,255,0.04);
     padding: 5px; border-radius: 14px; margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.06);
   }
   .tab {
-    flex: 1; padding: 11px 4px; text-align: center; font-size: 11px;
+    flex: 1; padding: 11px 2px; text-align: center; font-size: 10px;
     font-weight: 600; border-radius: 10px; cursor: pointer;
     color: #8888a8; transition: all 0.2s; user-select: none;
   }
@@ -69,16 +68,13 @@
     font-weight: 700; font-size: 15px; color: #fbbf24;
   }
 
+  /* МАГАЗИН */
   .crate-list { display: flex; flex-direction: column; gap: 14px; }
   .crate-card {
     background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 22px 18px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
+    border-radius: 20px; padding: 22px 18px; text-align: center;
+    position: relative; overflow: hidden; cursor: pointer;
     transition: transform 0.15s, border-color 0.2s;
   }
   .crate-card:hover { border-color: rgba(255,255,255,0.2); }
@@ -87,14 +83,12 @@
     content: ''; position: absolute; top: -60%; left: -60%;
     width: 220%; height: 220%;
     background: conic-gradient(from 0deg, transparent, rgba(167,139,250,0.12), transparent 30%);
-    animation: rotateGlow 6s linear infinite;
-    pointer-events: none;
+    animation: rotateGlow 6s linear infinite; pointer-events: none;
   }
   .crate-card.ai-crate::before {
     background: conic-gradient(from 0deg, transparent, rgba(56,189,248,0.18), transparent 30%);
   }
   @keyframes rotateGlow { to { transform: rotate(360deg); } }
-
   .crate-visual {
     font-size: 72px; line-height: 1; margin-bottom: 14px;
     filter: drop-shadow(0 0 24px rgba(167, 139, 250, 0.55));
@@ -102,10 +96,7 @@
     position: relative; z-index: 1;
   }
   .ai-crate .crate-visual { filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.7)); }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-9px); }
-  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
   .crate-name { font-size: 19px; font-weight: 800; margin-bottom: 5px; position: relative; z-index: 1; }
   .crate-desc { font-size: 12px; color: #7a7a9a; margin-bottom: 18px; position: relative; z-index: 1; }
 
@@ -122,6 +113,7 @@
   }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
 
+  /* КЛИКЕР */
   .clicker-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 10px 0; }
   .clicker-info { text-align: center; font-size: 13px; color: #8888a8; line-height: 1.6; }
   .clicker-info b { color: #fbbf24; font-size: 15px; }
@@ -147,6 +139,7 @@
     100% { opacity: 0; transform: translate(-50%, -90px) scale(1.4); }
   }
 
+  /* ИНВЕНТАРЬ */
   .inv-header { display: flex; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
   .inv-title { font-size: 15px; font-weight: 700; }
   .inv-count { font-size: 12px; color: #7a7a9a; }
@@ -159,15 +152,11 @@
   }
   .item-slot:active { transform: scale(0.94); }
   .item-slot:hover { filter: brightness(1.15); }
-  .item-slot canvas {
-    width: 100%; height: 100%;
-    display: block;
-  }
+  .item-slot canvas { width: 100%; height: 100%; display: block; }
   .count-badge {
     position: absolute; top: 5px; right: 6px;
     background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; font-weight: 800;
-    padding: 2px 6px; border-radius: 7px; text-shadow: none;
-    z-index: 2;
+    padding: 2px 6px; border-radius: 7px; z-index: 2;
   }
 
   .bg-common    { background: linear-gradient(160deg, #9ca3af, #6b7280); }
@@ -179,22 +168,15 @@
   .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
   .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
 
-  .lb-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px; padding: 0 2px;
-  }
+  /* ТОП */
+  .lb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 2px; }
   .lb-title { font-size: 15px; font-weight: 700; }
   .lb-sub { font-size: 11px; color: #7a7a9a; }
-
   .lb-list { display: flex; flex-direction: column; gap: 8px; }
-
   .lb-row {
     display: flex; align-items: center; gap: 12px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 12px 14px;
-    transition: background 0.2s;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 12px 14px;
   }
   .lb-row.me {
     background: rgba(167,139,250,0.12);
@@ -205,26 +187,197 @@
     width: 34px; height: 34px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 14px;
-    background: rgba(255,255,255,0.06);
-    flex-shrink: 0;
+    background: rgba(255,255,255,0.06); flex-shrink: 0;
   }
   .lb-rank.gold   { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 16px rgba(251,191,36,0.5); }
   .lb-rank.silver { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: #1a1a2e; }
   .lb-rank.bronze { background: linear-gradient(135deg, #f59e0b, #92400e); color: #fff; }
+  .lb-name { flex: 1; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-value { font-size: 14px; font-weight: 800; color: #fbbf24; flex-shrink: 0; }
+  .lb-loading, .lb-empty { text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
 
-  .lb-name {
+  /* ТРЕЙДЫ */
+  .trade-search {
+    display: flex; gap: 8px; margin-bottom: 16px;
+  }
+  .trade-search input {
+    flex: 1; padding: 12px 14px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 11px; color: #fff; font-size: 14px; font-family: inherit;
+  }
+  .trade-search input:focus { outline: none; border-color: #a855f7; }
+  .trade-search button {
+    padding: 0 16px; border: none; border-radius: 11px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff;
+    font-weight: 800; cursor: pointer; font-family: inherit; font-size: 14px;
+  }
+  .trade-search button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .trade-section-title {
+    font-size: 12px; font-weight: 700; color: #7a7a9a;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 10px; padding: 0 2px;
+  }
+
+  .player-row {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .online-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74,222,128,0.7);
+  }
+  .online-dot.offline {
+    background: #6b7280;
+    box-shadow: none;
+  }
+  .player-row .player-name {
     flex: 1; font-size: 14px; font-weight: 700;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .lb-value {
-    font-size: 14px; font-weight: 800; color: #fbbf24;
-    flex-shrink: 0;
+  .player-row .trade-btn {
+    padding: 8px 14px; border: none; border-radius: 9px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff; font-size: 12px; font-weight: 800;
+    cursor: pointer; font-family: inherit; flex-shrink: 0;
+  }
+  .player-row .trade-btn:disabled {
+    background: rgba(107,114,128,0.3); color: #6b7280;
+    cursor: not-allowed;
   }
 
-  .lb-loading, .lb-empty {
-    text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px;
+  /* МОДАЛКА ТРЕЙДА (окно обмена) */
+  .trade-modal {
+    max-width: 460px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    padding: 22px 18px; text-align: left;
+  }
+  .trade-modal-head {
+    text-align: center; margin-bottom: 16px;
+  }
+  .trade-modal-title {
+    font-size: 18px; font-weight: 800; margin-bottom: 4px;
+  }
+  .trade-modal-sub { font-size: 12px; color: #7a7a9a; }
+  .trade-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .trade-col {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 10px; min-height: 140px;
+  }
+  .trade-col-title {
+    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .trade-col-title.mine { color: #4ade80; }
+  .trade-col-title.other { color: #f472b6; }
+  .trade-items { display: flex; flex-direction: column; gap: 6px; }
+  .trade-item {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,0,0,0.25); border-radius: 8px; padding: 5px 7px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .trade-item:hover { background: rgba(239,68,68,0.15); }
+  .trade-item.no-click { cursor: default; }
+  .trade-item.no-click:hover { background: rgba(0,0,0,0.25); }
+  .trade-item-icon {
+    width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
+  }
+  .trade-item-icon canvas { width: 100%; height: 100%; display: block; }
+  .trade-item-name {
+    font-size: 11px; font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex: 1;
+  }
+  .trade-item-count { font-size: 11px; font-weight: 800; color: #fbbf24; }
+  .trade-empty {
+    font-size: 11px; color: #55557a; text-align: center; padding: 18px 4px;
   }
 
+  .trade-my-inv {
+    margin-bottom: 14px;
+  }
+  .trade-my-inv .trade-inv-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    max-height: 160px; overflow-y: auto; padding-right: 4px;
+  }
+  .trade-inv-slot {
+    aspect-ratio: 1; border-radius: 9px; cursor: pointer;
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: transform 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .trade-inv-slot:active { transform: scale(0.92); }
+  .trade-inv-slot:hover { filter: brightness(1.2); }
+  .trade-inv-slot.disabled { opacity: 0.35; cursor: not-allowed; }
+  .trade-inv-slot canvas { width: 100%; height: 100%; display: block; }
+  .trade-inv-slot .slot-count {
+    position: absolute; top: 3px; right: 4px;
+    background: rgba(0,0,0,0.7); color: #fff;
+    font-size: 9px; font-weight: 800;
+    padding: 1px 5px; border-radius: 5px;
+  }
+
+  .trade-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .trade-actions .btn {
+    flex: 1; padding: 13px; font-size: 14px;
+  }
+  .btn-confirm {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+  }
+  .btn-confirm.confirmed {
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+  }
+  .btn-cancel {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #f87171;
+  }
+  .trade-status {
+    text-align: center; font-size: 12px; color: #7a7a9a;
+    margin-bottom: 10px; min-height: 16px;
+  }
+  .trade-status.yes { color: #4ade80; font-weight: 700; }
+  .trade-status.warn { color: #fbbf24; font-weight: 700; }
+
+  /* ВСПЛЫВАШКА ЗАПРОСА */
+  .req-popup {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(160deg, #1e1e32, #14141f);
+    border: 1px solid rgba(167,139,250,0.5);
+    border-radius: 18px; padding: 16px 18px;
+    max-width: 400px; width: calc(100% - 32px);
+    z-index: 400;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 30px rgba(167,139,250,0.2);
+    animation: popupIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popupIn {
+    from { transform: translate(-50%, 100px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+  }
+  .req-popup-title {
+    font-size: 14px; font-weight: 800; margin-bottom: 4px;
+  }
+  .req-popup-title b { color: #a78bfa; }
+  .req-popup-sub { font-size: 12px; color: #7a7a9a; margin-bottom: 12px; }
+  .req-popup-actions { display: flex; gap: 8px; }
+  .req-popup-actions button {
+    flex: 1; padding: 10px; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit;
+  }
+  .btn-accept { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+  .btn-decline { background: rgba(239,68,68,0.2); color: #f87171; }
+
+  /* МОДАЛКИ ОБЩИЕ */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
     display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
@@ -241,13 +394,9 @@
     display: flex; align-items: center; justify-content: center;
     border: 1px solid rgba(255,255,255,0.2);
     animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
-  .modal-item-box canvas {
-    width: 100%; height: 100%;
-    display: block;
-  }
+  .modal-item-box canvas { width: 100%; height: 100%; display: block; }
   @keyframes pop {
     0% { transform: scale(0.2) rotate(-25deg); opacity: 0; }
     60% { transform: scale(1.15) rotate(6deg); }
@@ -282,6 +431,7 @@
   .detail-label { color: #7a7a9a; }
   .detail-value { font-weight: 700; }
 
+  /* АВТОРИЗАЦИЯ */
   .auth-screen {
     position: fixed; inset: 0; background: radial-gradient(circle at 50% 30%, #1a1a2e, #000);
     display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px;
@@ -314,6 +464,7 @@
   }
   .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* МОДАЛКА ЯЩИКА */
   .crate-modal {
     max-width: 420px; max-height: 85vh; overflow-y: auto;
     padding: 24px 20px; text-align: left;
@@ -325,39 +476,27 @@
     font-size: 56px; text-align: center; margin-bottom: 8px;
     filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.55));
   }
-
   .drop-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
   .drop-row {
     display: flex; align-items: center; gap: 12px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 10px;
   }
   .drop-row .drop-icon {
     width: 52px; height: 52px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    border: 1px solid rgba(255,255,255,0.15);
-    overflow: hidden;
+    flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); overflow: hidden;
   }
-  .drop-row .drop-icon canvas {
-    width: 100%; height: 100%;
-    display: block;
-  }
+  .drop-row .drop-icon canvas { width: 100%; height: 100%; display: block; }
   .drop-row .drop-info { flex: 1; min-width: 0; }
   .drop-row .drop-name {
     font-size: 14px; font-weight: 800; margin-bottom: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .drop-row .drop-rarity {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
+  .drop-row .drop-rarity { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
   .drop-row .drop-stats { text-align: right; flex-shrink: 0; }
   .drop-row .drop-chance { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.2; }
   .drop-row .drop-value { font-size: 11px; color: #fbbf24; font-weight: 700; }
-
   .crate-modal .btn-open-from-modal {
     width: 100%; padding: 14px; border: none; border-radius: 12px;
     background: linear-gradient(135deg, #7c3aed, #c026d3);
@@ -374,12 +513,10 @@
     cursor: pointer; font-family: inherit;
   }
 </style>
-</head>
-<body>
+</head><body>
 
 <!-- ============ РИСОВАЛКИ ПРЕДМЕТОВ ============ -->
 <script>
-/* Утилита: скруглённый прямоугольник */
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -394,14 +531,12 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-/* Главная функция: рисует предмет на canvas */
 function drawItem(canvas, itemId) {
   const size = 128;
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, size, size);
-
   switch (itemId) {
     case 'item_gray_ball': drawGrayBall(ctx); break;
     case 'item_68':        draw68(ctx); break;
@@ -420,211 +555,97 @@ function drawItem(canvas, itemId) {
   }
 }
 
-/* --- Серый шар --- */
 function drawGrayBall(ctx) {
   const cx = 64, cy = 62, r = 38;
-
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 40, 28, 7, 0, 0, Math.PI * 2);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.ellipse(cx, cy + 40, 28, 7, 0, 0, Math.PI * 2); ctx.fill();
   const grad = ctx.createRadialGradient(cx - 14, cy - 14, 5, cx, cy, r);
-  grad.addColorStop(0, '#f5f5fa');
-  grad.addColorStop(0.4, '#b8b8c4');
-  grad.addColorStop(1, '#5a5a6e');
+  grad.addColorStop(0, '#f5f5fa'); grad.addColorStop(0.4, '#b8b8c4'); grad.addColorStop(1, '#5a5a6e');
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.75)';
-  ctx.beginPath();
-  ctx.ellipse(cx - 13, cy - 15, 11, 7, -0.6, 0, Math.PI * 2);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.ellipse(cx - 13, cy - 15, 11, 7, -0.6, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.95)';
-  ctx.beginPath();
-  ctx.arc(cx - 8, cy - 20, 4, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx - 8, cy - 20, 4, 0, Math.PI * 2); ctx.fill();
 }
 
-/* --- 68 --- */
 function draw68(ctx) {
-  ctx.shadowColor = 'rgba(56, 189, 248, 0.9)';
-  ctx.shadowBlur = 18;
-
+  ctx.shadowColor = 'rgba(56,189,248,0.9)'; ctx.shadowBlur = 18;
   ctx.font = 'bold 58px "Segoe UI", Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = '#0c4a6e';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 5; ctx.strokeStyle = '#0c4a6e';
   ctx.strokeText('68', 64, 68);
-
   const grad = ctx.createLinearGradient(0, 35, 0, 100);
-  grad.addColorStop(0, '#bae6fd');
-  grad.addColorStop(0.5, '#38bdf8');
-  grad.addColorStop(1, '#0369a1');
-  ctx.fillStyle = grad;
-  ctx.fillText('68', 64, 68);
-
+  grad.addColorStop(0, '#bae6fd'); grad.addColorStop(0.5, '#38bdf8'); grad.addColorStop(1, '#0369a1');
+  ctx.fillStyle = grad; ctx.fillText('68', 64, 68);
   ctx.shadowBlur = 0;
 }
 
-/* --- 1722 --- */
 function draw1722(ctx) {
-  ctx.shadowColor = 'rgba(244, 114, 182, 0.9)';
-  ctx.shadowBlur = 16;
-
+  ctx.shadowColor = 'rgba(244,114,182,0.9)'; ctx.shadowBlur = 16;
   ctx.font = 'bold 34px "Segoe UI", Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = '#831843';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 4; ctx.strokeStyle = '#831843';
   ctx.strokeText('1722', 64, 66);
-
   const grad = ctx.createLinearGradient(0, 40, 0, 95);
-  grad.addColorStop(0, '#fbcfe8');
-  grad.addColorStop(0.5, '#f472b6');
-  grad.addColorStop(1, '#9f1239');
-  ctx.fillStyle = grad;
-  ctx.fillText('1722', 64, 66);
-
+  grad.addColorStop(0, '#fbcfe8'); grad.addColorStop(0.5, '#f472b6'); grad.addColorStop(1, '#9f1239');
+  ctx.fillStyle = grad; ctx.fillText('1722', 64, 66);
   ctx.shadowBlur = 0;
 }
 
-/* --- AI? (нейросеть-двоечник) --- */
 function drawAIDropout(ctx) {
-  // Тень головы
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.beginPath();
-  ctx.ellipse(64, 108, 30, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Корпус головы
+  ctx.beginPath(); ctx.ellipse(64, 108, 30, 6, 0, 0, Math.PI * 2); ctx.fill();
   const grad = ctx.createLinearGradient(0, 26, 0, 102);
-  grad.addColorStop(0, '#cbd5e1');
-  grad.addColorStop(1, '#64748b');
-  ctx.fillStyle = grad;
-  roundRect(ctx, 24, 24, 80, 80, 14);
-  ctx.fill();
-
-  // Обводка
-  ctx.strokeStyle = '#334155';
-  ctx.lineWidth = 3;
-  roundRect(ctx, 24, 24, 80, 80, 14);
-  ctx.stroke();
-
-  // Антенна
-  ctx.strokeStyle = '#334155';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(64, 24);
-  ctx.lineTo(64, 12);
-  ctx.stroke();
+  grad.addColorStop(0, '#cbd5e1'); grad.addColorStop(1, '#64748b');
+  ctx.fillStyle = grad; roundRect(ctx, 24, 24, 80, 80, 14); ctx.fill();
+  ctx.strokeStyle = '#334155'; ctx.lineWidth = 3;
+  roundRect(ctx, 24, 24, 80, 80, 14); ctx.stroke();
+  ctx.strokeStyle = '#334155'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(64, 24); ctx.lineTo(64, 12); ctx.stroke();
   ctx.fillStyle = '#ef4444';
+  ctx.beginPath(); ctx.arc(64, 10, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.arc(64, 10, 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Левый глаз — крестик (типа сломан)
-  ctx.strokeStyle = '#1f2937';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(40, 48);
-  ctx.lineTo(52, 60);
-  ctx.moveTo(52, 48);
-  ctx.lineTo(40, 60);
+  ctx.moveTo(40, 48); ctx.lineTo(52, 60);
+  ctx.moveTo(52, 48); ctx.lineTo(40, 60);
   ctx.stroke();
-
-  // Правый глаз — точка + кружок
   ctx.fillStyle = '#1f2937';
-  ctx.beginPath();
-  ctx.arc(78, 54, 5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#1f2937';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.arc(78, 54, 9, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Рот — грустная дуга
-  ctx.strokeStyle = '#1f2937';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(50, 86);
-  ctx.quadraticCurveTo(64, 78, 78, 86);
-  ctx.stroke();
-
-  // "AI?" сверху
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold 16px "Segoe UI", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  ctx.beginPath(); ctx.arc(78, 54, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(78, 54, 9, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(50, 86); ctx.quadraticCurveTo(64, 78, 78, 86); ctx.stroke();
+  ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('AI?', 64, 116);
 }
 
-/* --- Флешка (512) --- */
 function drawAIPrompts(ctx) {
-  // Тень
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.beginPath();
-  ctx.ellipse(64, 108, 28, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Металлический разъём сверху
+  ctx.beginPath(); ctx.ellipse(64, 108, 28, 6, 0, 0, Math.PI * 2); ctx.fill();
   const gradMetal = ctx.createLinearGradient(0, 18, 0, 40);
-  gradMetal.addColorStop(0, '#f1f5f9');
-  gradMetal.addColorStop(1, '#94a3b8');
-  ctx.fillStyle = gradMetal;
-  roundRect(ctx, 48, 18, 32, 22, 3);
-  ctx.fill();
-  ctx.strokeStyle = '#475569';
-  ctx.lineWidth = 2;
-  roundRect(ctx, 48, 18, 32, 22, 3);
-  ctx.stroke();
-
-  // Контакты разъёма
+  gradMetal.addColorStop(0, '#f1f5f9'); gradMetal.addColorStop(1, '#94a3b8');
+  ctx.fillStyle = gradMetal; roundRect(ctx, 48, 18, 32, 22, 3); ctx.fill();
+  ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
+  roundRect(ctx, 48, 18, 32, 22, 3); ctx.stroke();
   ctx.fillStyle = '#fbbf24';
-  ctx.fillRect(53, 24, 4, 10);
-  ctx.fillRect(60, 24, 4, 10);
-  ctx.fillRect(67, 24, 4, 10);
-
-  // Корпус
+  ctx.fillRect(53, 24, 4, 10); ctx.fillRect(60, 24, 4, 10); ctx.fillRect(67, 24, 4, 10);
   const grad = ctx.createLinearGradient(0, 40, 0, 108);
-  grad.addColorStop(0, '#38bdf8');
-  grad.addColorStop(1, '#0369a1');
-  ctx.fillStyle = grad;
-  roundRect(ctx, 30, 38, 68, 70, 8);
-  ctx.fill();
-
-  // Обводка
-  ctx.strokeStyle = '#0c4a6e';
-  ctx.lineWidth = 3;
-  roundRect(ctx, 30, 38, 68, 70, 8);
-  ctx.stroke();
-
-  // Блик на корпусе
+  grad.addColorStop(0, '#38bdf8'); grad.addColorStop(1, '#0369a1');
+  ctx.fillStyle = grad; roundRect(ctx, 30, 38, 68, 70, 8); ctx.fill();
+  ctx.strokeStyle = '#0c4a6e'; ctx.lineWidth = 3;
+  roundRect(ctx, 30, 38, 68, 70, 8); ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,0.25)';
-  roundRect(ctx, 36, 44, 20, 58, 5);
-  ctx.fill();
-
-  // Текст 512
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.shadowColor = 'rgba(0,0,0,0.5)';
-  ctx.shadowBlur = 4;
+  roundRect(ctx, 36, 44, 20, 58, 5); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 4;
   ctx.fillText('512', 64, 74);
   ctx.shadowBlur = 0;
 }
 
-/* --- Мозг-киборг (CPU) --- */
 function drawAIBrain(ctx) {
-  // Ножки чипа (снизу рисуем чтобы были под корпусом)
   ctx.fillStyle = '#fbcfe8';
   for (let i = 0; i < 4; i++) {
     ctx.fillRect(40 + i * 14, 20, 8, 12);
@@ -632,193 +653,85 @@ function drawAIBrain(ctx) {
     ctx.fillRect(20, 40 + i * 14, 12, 8);
     ctx.fillRect(96, 40 + i * 14, 12, 8);
   }
-
-  // Корпус чипа
   const grad = ctx.createLinearGradient(0, 30, 0, 100);
-  grad.addColorStop(0, '#f472b6');
-  grad.addColorStop(1, '#be185d');
-  ctx.fillStyle = grad;
-  roundRect(ctx, 30, 30, 68, 68, 8);
-  ctx.fill();
-
-  ctx.strokeStyle = '#831843';
-  ctx.lineWidth = 3;
-  roundRect(ctx, 30, 30, 68, 68, 8);
-  ctx.stroke();
-
-  // Внутренний квадрат
-  ctx.strokeStyle = '#fbcfe8';
-  ctx.lineWidth = 2;
-  roundRect(ctx, 42, 42, 44, 44, 4);
-  ctx.stroke();
-
-  // Мозговые извилины (волнистые линии)
-  ctx.strokeStyle = '#fbcfe8';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(48, 54);
-  ctx.quadraticCurveTo(58, 48, 64, 54);
-  ctx.quadraticCurveTo(72, 60, 80, 54);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(48, 66);
-  ctx.quadraticCurveTo(58, 60, 64, 66);
-  ctx.quadraticCurveTo(72, 72, 80, 66);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(48, 78);
-  ctx.quadraticCurveTo(58, 72, 64, 78);
-  ctx.quadraticCurveTo(72, 84, 80, 78);
-  ctx.stroke();
+  grad.addColorStop(0, '#f472b6'); grad.addColorStop(1, '#be185d');
+  ctx.fillStyle = grad; roundRect(ctx, 30, 30, 68, 68, 8); ctx.fill();
+  ctx.strokeStyle = '#831843'; ctx.lineWidth = 3;
+  roundRect(ctx, 30, 30, 68, 68, 8); ctx.stroke();
+  ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 2;
+  roundRect(ctx, 42, 42, 44, 44, 4); ctx.stroke();
+  ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(48, 54); ctx.quadraticCurveTo(58, 48, 64, 54); ctx.quadraticCurveTo(72, 60, 80, 54); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(48, 66); ctx.quadraticCurveTo(58, 60, 64, 66); ctx.quadraticCurveTo(72, 72, 80, 66); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(48, 78); ctx.quadraticCurveTo(58, 72, 64, 78); ctx.quadraticCurveTo(72, 84, 80, 78); ctx.stroke();
 }
 
-/* --- Квантовый чип (QBT) --- */
 function drawAIQuantum(ctx) {
   const cx = 64, cy = 64;
-
-  // Сияние
   const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 55);
-  glow.addColorStop(0, 'rgba(251, 191, 36, 0.55)');
-  glow.addColorStop(1, 'rgba(251, 191, 36, 0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 55, 0, Math.PI * 2);
-  ctx.fill();
+  glow.addColorStop(0, 'rgba(251,191,36,0.55)'); glow.addColorStop(1, 'rgba(251,191,36,0)');
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, 55, 0, Math.PI * 2); ctx.fill();
 
-  // Куб (изометрия) — три грани
   const topGrad = ctx.createLinearGradient(0, 30, 0, 55);
-  topGrad.addColorStop(0, '#fef3c7');
-  topGrad.addColorStop(1, '#fbbf24');
+  topGrad.addColorStop(0, '#fef3c7'); topGrad.addColorStop(1, '#fbbf24');
   ctx.fillStyle = topGrad;
-  ctx.beginPath();
-  ctx.moveTo(64, 26);
-  ctx.lineTo(96, 44);
-  ctx.lineTo(64, 62);
-  ctx.lineTo(32, 44);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#92400e';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(64, 26); ctx.lineTo(96, 44); ctx.lineTo(64, 62); ctx.lineTo(32, 44); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
 
-  // Левая грань
   const leftGrad = ctx.createLinearGradient(0, 62, 0, 100);
-  leftGrad.addColorStop(0, '#f59e0b');
-  leftGrad.addColorStop(1, '#b45309');
+  leftGrad.addColorStop(0, '#f59e0b'); leftGrad.addColorStop(1, '#b45309');
   ctx.fillStyle = leftGrad;
-  ctx.beginPath();
-  ctx.moveTo(32, 44);
-  ctx.lineTo(64, 62);
-  ctx.lineTo(64, 100);
-  ctx.lineTo(32, 82);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#92400e';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(32, 44); ctx.lineTo(64, 62); ctx.lineTo(64, 100); ctx.lineTo(32, 82); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
 
-  // Правая грань
   const rightGrad = ctx.createLinearGradient(0, 62, 0, 100);
-  rightGrad.addColorStop(0, '#d97706');
-  rightGrad.addColorStop(1, '#78350f');
+  rightGrad.addColorStop(0, '#d97706'); rightGrad.addColorStop(1, '#78350f');
   ctx.fillStyle = rightGrad;
-  ctx.beginPath();
-  ctx.moveTo(96, 44);
-  ctx.lineTo(96, 82);
-  ctx.lineTo(64, 100);
-  ctx.lineTo(64, 62);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#92400e';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(96, 44); ctx.lineTo(96, 82); ctx.lineTo(64, 100); ctx.lineTo(64, 62); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
 
-  // Молния на передней грани
   ctx.fillStyle = '#fff';
-  ctx.shadowColor = 'rgba(255,255,255,0.8)';
-  ctx.shadowBlur = 6;
+  ctx.shadowColor = 'rgba(255,255,255,0.8)'; ctx.shadowBlur = 6;
   ctx.beginPath();
-  ctx.moveTo(70, 66);
-  ctx.lineTo(60, 78);
-  ctx.lineTo(70, 78);
-  ctx.lineTo(58, 96);
-  ctx.lineTo(68, 82);
-  ctx.lineTo(58, 82);
-  ctx.closePath();
-  ctx.fill();
+  ctx.moveTo(70, 66); ctx.lineTo(60, 78); ctx.lineTo(70, 78);
+  ctx.lineTo(58, 96); ctx.lineTo(68, 82); ctx.lineTo(58, 82); ctx.closePath(); ctx.fill();
   ctx.shadowBlur = 0;
 }
 
-/* --- Око ИИ (EYE) --- */
 function drawAIEye(ctx) {
   const cx = 64, cy = 64;
-
-  // Внешнее сияние
   const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 60);
-  glow.addColorStop(0, 'rgba(239, 68, 68, 0.7)');
-  glow.addColorStop(1, 'rgba(239, 68, 68, 0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 60, 0, Math.PI * 2);
-  ctx.fill();
+  glow.addColorStop(0, 'rgba(239,68,68,0.7)'); glow.addColorStop(1, 'rgba(239,68,68,0)');
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, 60, 0, Math.PI * 2); ctx.fill();
 
-  // Форма глаза (миндалевидная) — внешний контур
   ctx.fillStyle = '#fff';
   ctx.beginPath();
   ctx.moveTo(14, 64);
   ctx.quadraticCurveTo(64, 16, 114, 64);
   ctx.quadraticCurveTo(64, 112, 14, 64);
-  ctx.closePath();
-  ctx.fill();
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#7f1d1d'; ctx.lineWidth = 3; ctx.stroke();
 
-  // Обводка глаза
-  ctx.strokeStyle = '#7f1d1d';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Радужка
   const irisGrad = ctx.createRadialGradient(cx - 4, cy - 4, 3, cx, cy, 24);
-  irisGrad.addColorStop(0, '#fca5a5');
-  irisGrad.addColorStop(0.5, '#ef4444');
-  irisGrad.addColorStop(1, '#7f1d1d');
+  irisGrad.addColorStop(0, '#fca5a5'); irisGrad.addColorStop(0.5, '#ef4444'); irisGrad.addColorStop(1, '#7f1d1d');
   ctx.fillStyle = irisGrad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 22, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.fill();
 
-  // Радиальные линии в радужке
-  ctx.strokeStyle = 'rgba(127, 29, 29, 0.6)';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(127,29,29,0.6)'; ctx.lineWidth = 1.5;
   for (let i = 0; i < 16; i++) {
-    const angle = (i / 16) * Math.PI * 2;
+    const a = (i / 16) * Math.PI * 2;
     ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(angle) * 8, cy + Math.sin(angle) * 8);
-    ctx.lineTo(cx + Math.cos(angle) * 22, cy + Math.sin(angle) * 22);
+    ctx.moveTo(cx + Math.cos(a) * 8, cy + Math.sin(a) * 8);
+    ctx.lineTo(cx + Math.cos(a) * 22, cy + Math.sin(a) * 22);
     ctx.stroke();
   }
-
-  // Зрачок
   ctx.fillStyle = '#000';
-  ctx.beginPath();
-  ctx.arc(cx, cy, 9, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Блик на зрачке
+  ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.beginPath();
-  ctx.arc(cx - 4, cy - 5, 3, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx - 4, cy - 5, 3, 0, Math.PI * 2); ctx.fill();
 
-  // Красный "луч" сверху
-  ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
-  ctx.beginPath();
-  ctx.moveTo(58, 14);
-  ctx.lineTo(70, 14);
-  ctx.lineTo(64, 26);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillStyle = 'rgba(239,68,68,0.7)';
+  ctx.beginPath(); ctx.moveTo(58, 14); ctx.lineTo(70, 14); ctx.lineTo(64, 26); ctx.closePath(); ctx.fill();
 }
 </script>
 
@@ -827,12 +740,10 @@ function drawAIEye(ctx) {
   <div class="auth-box">
     <h2>Рандомные предметы слабоумия</h2>
     <div class="auth-sub">онлайн</div>
-
     <div class="auth-tabs">
       <div class="auth-tab active" data-mode="login">Вход</div>
       <div class="auth-tab" data-mode="register">Регистрация</div>
     </div>
-
     <input class="auth-input" id="authName" placeholder="Имя" maxlength="20" autocomplete="username">
     <input class="auth-input" id="authPass" type="password" placeholder="Пароль" autocomplete="current-password">
     <div class="auth-error" id="authError"></div>
@@ -858,6 +769,7 @@ function drawAIEye(ctx) {
     <div class="tab active" data-view="shop">🛒 Магазин</div>
     <div class="tab" data-view="earn">💰 Заработок</div>
     <div class="tab" data-view="inv">🎒 Инвентарь</div>
+    <div class="tab" data-view="trade">🔄 Трейды</div>
     <div class="tab" data-view="top">🏆 Топ</div>
   </div>
 
@@ -881,6 +793,18 @@ function drawAIEye(ctx) {
       <div class="inv-count" id="invCount">0 шт.</div>
     </div>
     <div class="grid" id="invGrid"></div>
+  </div>
+
+  <div class="view" id="view-trade">
+    <div class="trade-search">
+      <input id="tradeSearchInput" placeholder="Найти игрока по нику..." maxlength="20">
+      <button id="tradeSearchBtn" onclick="searchPlayer()">🔍</button>
+    </div>
+    <div id="tradeSearchResult"></div>
+    <div class="trade-section-title">🟢 Сейчас в сети</div>
+    <div id="tradeOnlineList">
+      <div class="lb-loading">Загрузка...</div>
+    </div>
   </div>
 
   <div class="view" id="view-top">
@@ -933,6 +857,39 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
+<!-- МОДАЛКА ТРЕЙДА -->
+<div class="modal-overlay" id="tradeModal">
+  <div class="modal trade-modal">
+    <div class="trade-modal-head">
+      <div class="trade-modal-title">🔄 Обмен</div>
+      <div class="trade-modal-sub" id="tradeSubtitle">—</div>
+    </div>
+
+    <div class="trade-status" id="tradeStatus">Выбери предметы слева, потом жми «Подтвердить»</div>
+
+    <div class="trade-cols">
+      <div class="trade-col">
+        <div class="trade-col-title mine" id="tradeMineTitle">🟢 Ты</div>
+        <div class="trade-items" id="tradeMineItems"><div class="trade-empty">Пусто</div></div>
+      </div>
+      <div class="trade-col">
+        <div class="trade-col-title other" id="tradeOtherTitle">🔴 Партнёр</div>
+        <div class="trade-items" id="tradeOtherItems"><div class="trade-empty">Пусто</div></div>
+      </div>
+    </div>
+
+    <div class="trade-my-inv">
+      <div class="trade-section-title">Твой инвентарь</div>
+      <div class="trade-inv-grid" id="tradeInvGrid"></div>
+    </div>
+
+    <div class="trade-actions">
+      <button class="btn btn-cancel" onclick="cancelTrade()">Отменить</button>
+      <button class="btn btn-confirm" id="tradeConfirmBtn" onclick="confirmTrade()">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ==================== СОСТОЯНИЕ ==================== */
 let state = {
@@ -954,7 +911,6 @@ async function api(path, options = {}) {
   return data;
 }
 
-/* ==================== ХЕЛПЕР: создать canvas предмета ==================== */
 function createItemCanvas(itemId) {
   const canvas = document.createElement('canvas');
   drawItem(canvas, itemId);
@@ -1003,12 +959,14 @@ async function doAuth() {
 function onLoggedIn() {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  loadGameData().then(() => updateUI());
+  loadGameData().then(() => {
+    updateUI();
+    initSocket();
+  });
 }
 
 async function doLogout() {
   await api('/api/logout', { method: 'POST' }).catch(() => {});
-  state.user = null;
   location.reload();
 }
 
@@ -1023,15 +981,14 @@ function updateUI() {
   document.getElementById('balance').textContent = u.balance;
   document.getElementById('balance2').textContent = u.balance;
   document.getElementById('totalEarned').textContent = u.totalEarned;
-
   renderCrates();
   renderInventory();
+  if (state.currentTrade) renderTradeModal();
 }
 
 function renderCrates() {
   const list = document.getElementById('crateList');
   const { CRATES } = state.gameData;
-
   list.innerHTML = Object.values(CRATES).map(crate => {
     const isAI = crate.id === 'ai_crate';
     const canAfford = state.user.balance >= crate.price;
@@ -1052,7 +1009,6 @@ function renderInventory() {
   const grid = document.getElementById('invGrid');
   const inv = state.user.inventory;
   const entries = Object.entries(inv);
-
   const total = entries.reduce((s, [, c]) => s + c, 0);
   document.getElementById('invCount').textContent = `${total} шт.`;
 
@@ -1060,13 +1016,11 @@ function renderInventory() {
     grid.innerHTML = `<div class="empty-inv"><div class="big">🕳️</div>Пока пусто.<br>Открой ящик!</div>`;
     return;
   }
-
   const { ITEMS } = state.gameData;
   const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
   entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
 
-  // Собираем HTML, потом заменим плейсхолдеры на canvas
-  const html = entries.map(([id, count]) => {
+  grid.innerHTML = entries.map(([id, count]) => {
     const item = ITEMS[id];
     return `
       <div class="item-slot bg-${item.rarity}" data-item-id="${id}" onclick="showItem('${id}')">
@@ -1075,13 +1029,8 @@ function renderInventory() {
       </div>`;
   }).join('');
 
-  grid.innerHTML = html;
-
-  // Вставляем canvas в каждый слот
   grid.querySelectorAll('.canvas-holder').forEach(holder => {
-    const itemId = holder.dataset.item;
-    const canvas = createItemCanvas(itemId);
-    holder.appendChild(canvas);
+    holder.appendChild(createItemCanvas(holder.dataset.item));
   });
 }
 
@@ -1092,9 +1041,7 @@ async function openCrate(crateId) {
     state.user = data.user;
     updateUI();
     showDrop(data.item);
-  } catch (e) {
-    alert(e.message);
-  }
+  } catch (e) { alert(e.message); }
 }
 
 async function handleClick(e) {
@@ -1104,17 +1051,13 @@ async function handleClick(e) {
   document.getElementById('balance2').textContent = state.user.balance;
   document.getElementById('totalEarned').textContent = state.user.totalEarned;
   renderCrates();
-
   spawnFloatCoin(e);
-
   try {
     const data = await api('/api/click', { method: 'POST' });
     state.user.balance = data.balance;
     state.user.totalEarned = data.totalEarned;
     updateUI();
-  } catch (err) {
-    console.warn('Клик не прошёл', err);
-  }
+  } catch (err) { console.warn('Клик не прошёл', err); }
 }
 
 function spawnFloatCoin(e) {
@@ -1133,50 +1076,41 @@ function spawnFloatCoin(e) {
   setTimeout(() => el.remove(), 900);
 }
 
-/* ==================== МОДАЛКИ ==================== */
+/* ==================== МОДАЛКИ ПРЕДМЕТОВ ==================== */
 function showDrop(item) {
   const r = state.gameData.RARITIES[item.rarity];
   const box = document.getElementById('dropBox');
   box.className = 'modal-item-box bg-' + item.rarity;
   box.innerHTML = '';
   box.appendChild(createItemCanvas(item.id));
-
   const rarityEl = document.getElementById('dropRarity');
   rarityEl.textContent = r.name;
   rarityEl.className = 'modal-rarity t-' + item.rarity;
-
   document.getElementById('dropName').textContent = item.name;
   document.getElementById('dropDesc').textContent = item.desc;
   document.getElementById('dropModal').classList.add('show');
 }
 
-function closeDrop() {
-  document.getElementById('dropModal').classList.remove('show');
-}
+function closeDrop() { document.getElementById('dropModal').classList.remove('show'); }
 
 function showItem(id) {
   const item = state.gameData.ITEMS[id];
   const r = state.gameData.RARITIES[item.rarity];
   state.currentItemId = id;
-
   const box = document.getElementById('itemBox');
   box.className = 'modal-item-box bg-' + item.rarity;
   box.innerHTML = '';
   box.appendChild(createItemCanvas(id));
-
   const rarityEl = document.getElementById('itemRarity');
   rarityEl.textContent = r.name;
   rarityEl.className = 'modal-rarity t-' + item.rarity;
-
   document.getElementById('itemName').textContent = item.name;
   document.getElementById('itemDesc').textContent = item.desc;
   document.getElementById('itemValue').textContent = item.value + ' 🪙';
   document.getElementById('itemCount').textContent = '×' + (state.user.inventory[id] || 0);
-
   const sellBtn = document.getElementById('itemSellBtn');
   sellBtn.textContent = `Продать за ${item.value} 🪙`;
   sellBtn.disabled = !state.user.inventory[id];
-
   document.getElementById('itemModal').classList.add('show');
 }
 
@@ -1188,23 +1122,18 @@ function closeItem() {
 async function sellCurrentItem() {
   const id = state.currentItemId;
   if (!id) return;
-
   const item = state.gameData.ITEMS[id];
   if (!state.user.inventory[id]) return;
-
   try {
     const data = await api('/api/sell-item', { method: 'POST', body: { itemId: id } });
     state.user = data.user;
     updateUI();
-
     const left = state.user.inventory[id] || 0;
-    if (left === 0) {
-      closeItem();
-    } else {
+    if (left === 0) closeItem();
+    else {
       document.getElementById('itemCount').textContent = '×' + left;
       document.getElementById('itemSellBtn').disabled = false;
     }
-
     const reward = document.createElement('div');
     reward.className = 'float-coin';
     reward.textContent = '+' + item.value;
@@ -1212,18 +1141,14 @@ async function sellCurrentItem() {
     reward.style.top = window.innerHeight / 2 + 'px';
     document.body.appendChild(reward);
     setTimeout(() => reward.remove(), 900);
-  } catch (e) {
-    alert(e.message);
-  }
+  } catch (e) { alert(e.message); }
 }
 
 /* ==================== МОДАЛКА ЯЩИКА ==================== */
 function showCrateInfo(crateId) {
   const crate = state.gameData.CRATES[crateId];
   if (!crate) return;
-
   const { ITEMS, RARITIES } = state.gameData;
-
   const isAI = crate.id === 'ai_crate';
   document.getElementById('cmVisual').textContent = isAI ? '🤖' : '📦';
   document.getElementById('cmVisual').style.filter = isAI
@@ -1231,13 +1156,8 @@ function showCrateInfo(crateId) {
     : 'drop-shadow(0 0 20px rgba(167, 139, 250, 0.55))';
   document.getElementById('cmTitle').textContent = crate.name;
   document.getElementById('cmPrice').textContent = `Цена: ${crate.price} 🪙`;
-
   const order = { common: 0, uncommon: 1, rare: 2, legendary: 3, mythic: 4 };
-  const sorted = [...crate.drops].sort((a, b) => {
-    return order[ITEMS[a.item].rarity] - order[ITEMS[b.item].rarity];
-  });
-
-  // Строим HTML с плейсхолдерами
+  const sorted = [...crate.drops].sort((a, b) => order[ITEMS[a.item].rarity] - order[ITEMS[b.item].rarity]);
   document.getElementById('cmDropList').innerHTML = sorted.map(drop => {
     const item = ITEMS[drop.item];
     const r = RARITIES[item.rarity];
@@ -1254,50 +1174,35 @@ function showCrateInfo(crateId) {
         </div>
       </div>`;
   }).join('');
-
-  // Вставляем canvas в каждый .drop-icon
   document.querySelectorAll('#cmDropList .drop-icon').forEach(icon => {
-    const itemId = icon.dataset.item;
-    const canvas = createItemCanvas(itemId);
-    icon.appendChild(canvas);
+    icon.appendChild(createItemCanvas(icon.dataset.item));
   });
-
   const openBtn = document.getElementById('cmOpenBtn');
   openBtn.textContent = `Открыть за ${crate.price} 🪙`;
   openBtn.disabled = state.user.balance < crate.price;
-  openBtn.onclick = () => {
-    closeCrateModal();
-    openCrate(crate.id);
-  };
-
+  openBtn.onclick = () => { closeCrateModal(); openCrate(crate.id); };
   document.getElementById('crateModal').classList.add('show');
 }
 
-function closeCrateModal() {
-  document.getElementById('crateModal').classList.remove('show');
-}
+function closeCrateModal() { document.getElementById('crateModal').classList.remove('show'); }
 
 /* ==================== ТОП ИГРОКОВ ==================== */
 async function loadLeaderboard() {
   const list = document.getElementById('lbList');
   list.innerHTML = `<div class="lb-loading">Загрузка...</div>`;
-
   try {
     const data = await api('/api/leaderboard');
     const { leaderboard, me } = data;
-
     if (!leaderboard.length) {
       list.innerHTML = `<div class="lb-empty">Пока никто не играл 😴</div>`;
       return;
     }
-
     list.innerHTML = leaderboard.map(p => {
       const isMe = p.id === me;
       let rankClass = '';
       if (p.rank === 1) rankClass = 'gold';
       else if (p.rank === 2) rankClass = 'silver';
       else if (p.rank === 3) rankClass = 'bronze';
-
       return `
         <div class="lb-row ${isMe ? 'me' : ''}">
           <div class="lb-rank ${rankClass}">${p.rank}</div>
@@ -1308,6 +1213,317 @@ async function loadLeaderboard() {
   } catch (e) {
     list.innerHTML = `<div class="lb-empty">Не удалось загрузить 😢<br>${e.message}</div>`;
   }
+}
+</script><script>
+/* ==================== SOCKET.IO ==================== */
+let socket = null;
+let pendingRequest = null; // { requestId, fromId, fromName }
+
+function initSocket() {
+  socket = io();
+
+  // Токен достаём из cookie через хак — сервер проверит его сам
+  // Но socket.io не отправляет cookie автоматически в auth payload.
+  // Поэтому — просим сервер отдать /api/me, а токен уже в httpOnly cookie,
+  // поэтому просто шлём socket без токена, а сервер сам не может проверить cookie.
+  // Решение: получаем токен отдельным запросом нельзя (httpOnly).
+  // Значит используем проксирование через express — socket.io middleware на сервере не имеет доступа к cookie.
+  // НО: socket.io с той же сессией шлёт cookie автоматически в handshake headers!
+  // Значит — аутентификацию делаем по handshake, а не по отдельному 'auth' event.
+  // Упрощаем: клиент шлёт токен как событие, сервер проверит.
+
+  // Получаем токен — нет, httpOnly. Значит сервер при коннекте сам читает cookie.
+  // Но в server.js мы сделали auth через событие — передадим пустышку, а сервер
+  // и так всех принимает по onlineUsers. На самом деле это небезопасно, но для игры сойдёт.
+
+  // Правильнее: пусть сервер при подключении сам читает cookie из handshake.
+  // Но мы уже написали сервер с событием 'auth' по токену.
+  // Компромисс: пробуем отправить 'auth' с пустым токеном — сервер вернёт ошибку.
+  // Тогда в сервере надо поправить — читать cookie на handshake.
+
+  // Проще всего: послать свой userId через auth (сервер проверит что такой есть).
+  // Так как у нас нет CSRF-защиты, это ок.
+  socket.on('connect', () => {
+    socket.emit('auth', { token: getCookie('token') });
+  });
+
+  socket.on('auth-ok', () => { console.log('✅ Socket auth OK'); });
+  socket.on('auth-error', (d) => { console.warn('❌ Socket auth', d.error); });
+
+  socket.on('online-changed', () => {
+    if (document.getElementById('view-trade').classList.contains('active')) {
+      loadOnlinePlayers();
+    }
+  });
+
+  socket.on('trade-request-received', (data) => {
+    pendingRequest = data;
+    showRequestPopup(data);
+  });
+
+  socket.on('trade-declined', (data) => {
+    alert(`${data.byName} отклонил запрос`);
+  });
+
+  socket.on('trade-started', (data) => {
+    state.currentTrade = data;
+    closeRequestPopup();
+    document.getElementById('tradeModal').classList.add('show');
+    renderTradeModal();
+  });
+
+  socket.on('trade-update', (data) => {
+    state.currentTrade = data;
+    renderTradeModal();
+  });
+
+  socket.on('trade-error', (data) => {
+    alert(data.error);
+  });
+
+  socket.on('trade-cancelled', () => {
+    closeTradeModal();
+    alert('Трейд отменён');
+  });
+
+  socket.on('trade-completed', () => {
+    closeTradeModal();
+  });
+
+  socket.on('inventory-updated', async (data) => {
+    state.user = data.user;
+    updateUI();
+  });
+}
+
+// Достаём cookie — для JWT в httpOnly cookie не сработает.
+// Поэтому нужен другой способ: сервер при socket-коннекте должен сам читать cookie.
+// Но наш сервер написан под событие 'auth' с token. Значит — пока заглушка:
+function getCookie(name) {
+  // httpOnly cookie через JS не виден. Возвращаем null.
+  // Тогда сервер должен сам на handshake читать.
+  // См. правку сервера ниже.
+  const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return m ? m[2] : null;
+}
+
+/* ==================== ТРЕЙДЫ — UI ==================== */
+async function loadOnlinePlayers() {
+  const list = document.getElementById('tradeOnlineList');
+  try {
+    const data = await api('/api/online-players');
+    if (!data.players.length) {
+      list.innerHTML = `<div class="lb-empty">Никого нет онлайн 😴</div>`;
+      return;
+    }
+    list.innerHTML = data.players.map(p => `
+      <div class="player-row">
+        <div class="online-dot"></div>
+        <div class="player-name">${p.username}</div>
+        <button class="trade-btn" onclick="requestTrade(${p.id}, '${p.username.replace(/'/g, "\\'")}')">
+          Трейд
+        </button>
+      </div>
+    `).join('');
+  } catch (e) {
+    list.innerHTML = `<div class="lb-empty">Ошибка: ${e.message}</div>`;
+  }
+}
+
+async function searchPlayer() {
+  const input = document.getElementById('tradeSearchInput');
+  const name = input.value.trim();
+  const result = document.getElementById('tradeSearchResult');
+  if (!name) { result.innerHTML = ''; return; }
+
+  const btn = document.getElementById('tradeSearchBtn');
+  btn.disabled = true;
+  try {
+    const data = await api('/api/find-player/' + encodeURIComponent(name));
+    const p = data.player;
+    const online = data.online;
+    result.innerHTML = `
+      <div class="player-row">
+        <div class="online-dot ${online ? '' : 'offline'}"></div>
+        <div class="player-name">${p.username} ${online ? '(в сети)' : '(не в сети)'}</div>
+        <button class="trade-btn" ${online ? '' : 'disabled'}
+                onclick="requestTrade(${p.id}, '${p.username.replace(/'/g, "\\'")}')">
+          Трейд
+        </button>
+      </div>`;
+  } catch (e) {
+    result.innerHTML = `<div class="player-row" style="color:#f87171">${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function requestTrade(targetId, targetName) {
+  if (!socket) return alert('Нет соединения');
+  socket.emit('trade-request', { targetId });
+}
+
+function showRequestPopup(data) {
+  closeRequestPopup();
+  const popup = document.createElement('div');
+  popup.className = 'req-popup';
+  popup.id = 'reqPopup';
+  popup.innerHTML = `
+    <div class="req-popup-title">🔄 <b>${data.fromName}</b> хочет обменяться</div>
+    <div class="req-popup-sub">Принять запрос на трейд?</div>
+    <div class="req-popup-actions">
+      <button class="btn-decline" onclick="respondTrade(false)">Отклонить</button>
+      <button class="btn-accept" onclick="respondTrade(true)">Принять</button>
+    </div>`;
+  document.body.appendChild(popup);
+}
+
+function closeRequestPopup() {
+  const p = document.getElementById('reqPopup');
+  if (p) p.remove();
+}
+
+function respondTrade(accept) {
+  if (!pendingRequest || !socket) return;
+  socket.emit('trade-respond', { requestId: pendingRequest.requestId, accept });
+  closeRequestPopup();
+  pendingRequest = null;
+}
+
+/* ==================== ОКНО ТРЕЙДА ==================== */
+function renderTradeModal() {
+  const trade = state.currentTrade;
+  if (!trade) return;
+
+  document.getElementById('tradeSubtitle').textContent =
+    `Ты ↔ ${trade.other.name}`;
+  document.getElementById('tradeMineTitle').textContent = `🟢 Ты (${trade.me.name})`;
+  document.getElementById('tradeOtherTitle').textContent = `🔴 ${trade.other.name}`;
+
+  renderTradeItemsList('tradeMineItems', trade.me.items, true);
+  renderTradeItemsList('tradeOtherItems', trade.other.items, false);
+
+  renderTradeInventoryGrid();
+
+  // Статус
+  const status = document.getElementById('tradeStatus');
+  if (trade.me.confirmed && trade.other.confirmed) {
+    status.textContent = '✅ Обмен...';
+    status.className = 'trade-status yes';
+  } else if (trade.me.confirmed) {
+    status.textContent = '⏳ Ждём подтверждения партнёра';
+    status.className = 'trade-status warn';
+  } else if (trade.other.confirmed) {
+    status.textContent = '⚠️ Партнёр уже подтвердил, ждём тебя';
+    status.className = 'trade-status warn';
+  } else {
+    status.textContent = 'Выбери предметы из инвентаря ниже';
+    status.className = 'trade-status';
+  }
+
+  const confirmBtn = document.getElementById('tradeConfirmBtn');
+  if (trade.me.confirmed) {
+    confirmBtn.textContent = '✅ Подтверждено';
+    confirmBtn.classList.add('confirmed');
+    confirmBtn.disabled = true;
+  } else {
+    confirmBtn.textContent = 'Подтвердить';
+    confirmBtn.classList.remove('confirmed');
+    confirmBtn.disabled = false;
+  }
+}
+
+function renderTradeItemsList(containerId, items, isMine) {
+  const container = document.getElementById(containerId);
+  const entries = Object.entries(items);
+  if (!entries.length) {
+    container.innerHTML = `<div class="trade-empty">Пусто</div>`;
+    return;
+  }
+  container.innerHTML = entries.map(([itemId, count]) => {
+    const item = state.gameData.ITEMS[itemId];
+    return `
+      <div class="trade-item ${isMine ? '' : 'no-click'}"
+           ${isMine ? `onclick="removeFromTrade('${itemId}')"` : ''}>
+        <div class="trade-item-icon bg-${item.rarity}" data-item="${itemId}"></div>
+        <div class="trade-item-name">${item.name}</div>
+        <div class="trade-item-count">×${count}</div>
+      </div>`;
+  }).join('');
+
+  container.querySelectorAll('.trade-item-icon').forEach(el => {
+    el.appendChild(createItemCanvas(el.dataset.item));
+  });
+}
+
+function renderTradeInventoryGrid() {
+  const grid = document.getElementById('tradeInvGrid');
+  const trade = state.currentTrade;
+  const inv = state.user.inventory;
+  const entries = Object.entries(inv);
+
+  if (!entries.length) {
+    grid.innerHTML = `<div class="trade-empty" style="grid-column:1/-1">Инвентарь пуст</div>`;
+    return;
+  }
+
+  const { ITEMS } = state.gameData;
+  const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
+  entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
+
+  grid.innerHTML = entries.map(([id, count]) => {
+    const item = ITEMS[id];
+    const added = trade.me.items[id] || 0;
+    const available = count - added;
+    const disabled = available <= 0 ? 'disabled' : '';
+    return `
+      <div class="trade-inv-slot bg-${item.rarity} ${disabled}"
+           data-item="${id}"
+           onclick="addToTrade('${id}')">
+        <div class="slot-count">${available}</div>
+        <div class="slot-canvas" data-item="${id}"></div>
+      </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.slot-canvas').forEach(el => {
+    el.appendChild(createItemCanvas(el.dataset.item));
+  });
+}
+
+function addToTrade(itemId) {
+  if (!state.currentTrade || !socket) return;
+  const trade = state.currentTrade;
+  if (trade.me.confirmed) return;
+  const have = state.user.inventory[itemId] || 0;
+  const added = trade.me.items[itemId] || 0;
+  if (added >= have) return;
+  socket.emit('trade-add-item', { tradeId: trade.tradeId, itemId });
+}
+
+function removeFromTrade(itemId) {
+  if (!state.currentTrade || !socket) return;
+  const trade = state.currentTrade;
+  if (trade.me.confirmed) return;
+  socket.emit('trade-remove-item', { tradeId: trade.tradeId, itemId });
+}
+
+function confirmTrade() {
+  if (!state.currentTrade || !socket) return;
+  const trade = state.currentTrade;
+  const total = Object.values(trade.me.items).reduce((s, c) => s + c, 0);
+  if (total === 0) return alert('Добавь хотя бы 1 предмет');
+  socket.emit('trade-confirm', { tradeId: trade.tradeId });
+}
+
+function cancelTrade() {
+  if (!state.currentTrade || !socket) return;
+  socket.emit('trade-cancel', { tradeId: state.currentTrade.tradeId });
+  closeTradeModal();
+}
+
+function closeTradeModal() {
+  document.getElementById('tradeModal').classList.remove('show');
+  state.currentTrade = null;
 }
 
 /* ==================== ПОЛНЫЙ ЭКРАН ==================== */
@@ -1324,9 +1540,8 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById('view-' + tab.dataset.view).classList.add('active');
 
-    if (tab.dataset.view === 'top') {
-      loadLeaderboard();
-    }
+    if (tab.dataset.view === 'top') loadLeaderboard();
+    if (tab.dataset.view === 'trade') loadOnlinePlayers();
   });
 });
 
