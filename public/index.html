@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Рандомные предметы слабоумия</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -10,19 +10,22 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
     background: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #0f0f1a 60%, #000 100%);
     color: #e8e8f0; min-height: 100vh; overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
   .app { max-width: 480px; margin: 0 auto; padding: 16px 16px 100px; }
 
   .fs-btn {
     position: fixed; top: 14px; right: 14px; z-index: 200;
-    width: 44px; height: 44px; border-radius: 12px;
+    width: 48px; height: 48px; border-radius: 12px;
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-    color: #e8e8f0; font-size: 20px; cursor: pointer;
+    color: #e8e8f0; font-size: 22px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     backdrop-filter: blur(8px);
+    -webkit-user-select: none; user-select: none;
   }
+  .fs-btn:active { transform: scale(0.92); }
 
-  header { text-align: center; padding: 18px 0 22px; padding-right: 44px; }
+  header { text-align: center; padding: 18px 0 22px; padding-right: 52px; }
   h1 {
     font-size: 22px; font-weight: 800;
     background: linear-gradient(135deg, #a78bfa, #f472b6, #fbbf24);
@@ -33,14 +36,17 @@
 
   .user-bar {
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: #8888a8; margin-bottom: 12px; padding: 0 4px;
+    font-size: 13px; color: #8888a8; margin-bottom: 12px; padding: 0 4px; gap: 8px;
   }
   .user-bar b { color: #a78bfa; }
   .logout-btn {
     background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.35);
-    color: #f87171; font-size: 11px; padding: 5px 10px; border-radius: 8px;
+    color: #f87171; font-size: 13px; padding: 10px 14px; border-radius: 10px;
     cursor: pointer; font-family: inherit; font-weight: 700;
+    min-height: 44px;
+    -webkit-user-select: none; user-select: none;
   }
+  .logout-btn:active { transform: scale(0.96); }
 
   .tabs {
     display: flex; gap: 4px; background: rgba(255,255,255,0.04);
@@ -48,10 +54,15 @@
     border: 1px solid rgba(255,255,255,0.06);
   }
   .tab {
-    flex: 1; padding: 11px 2px; text-align: center; font-size: 10px;
-    font-weight: 600; border-radius: 10px; cursor: pointer;
-    color: #8888a8; transition: all 0.2s; user-select: none;
+    flex: 1; padding: 12px 2px; text-align: center; font-size: 10px;
+    font-weight: 700; border-radius: 10px; cursor: pointer;
+    color: #8888a8; transition: all 0.15s;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-user-select: none; user-select: none;
+    line-height: 1.2;
   }
+  .tab:active { transform: scale(0.97); }
   .tab.active {
     background: linear-gradient(135deg, #7c3aed, #a855f7);
     color: #fff; box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45);
@@ -64,8 +75,8 @@
   .balance {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.25);
-    border-radius: 12px; padding: 10px 16px; margin-bottom: 18px;
-    font-weight: 700; font-size: 15px; color: #fbbf24;
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;
+    font-weight: 700; font-size: 16px; color: #fbbf24;
   }
 
   /* МАГАЗИН */
@@ -76,8 +87,8 @@
     border-radius: 20px; padding: 22px 18px; text-align: center;
     position: relative; overflow: hidden; cursor: pointer;
     transition: transform 0.15s, border-color 0.2s;
+    -webkit-user-select: none; user-select: none;
   }
-  .crate-card:hover { border-color: rgba(255,255,255,0.2); }
   .crate-card:active { transform: scale(0.99); }
   .crate-card::before {
     content: ''; position: absolute; top: -60%; left: -60%;
@@ -101,10 +112,12 @@
   .crate-desc { font-size: 12px; color: #7a7a9a; margin-bottom: 18px; position: relative; z-index: 1; }
 
   .btn {
-    width: 100%; padding: 15px; border: none; border-radius: 13px;
-    font-size: 15px; font-weight: 800; cursor: pointer;
+    width: 100%; padding: 16px; border: none; border-radius: 13px;
+    font-size: 16px; font-weight: 800; cursor: pointer;
     transition: transform 0.12s, opacity 0.2s; font-family: inherit;
     position: relative; z-index: 1;
+    min-height: 52px;
+    -webkit-user-select: none; user-select: none;
   }
   .btn:active:not(:disabled) { transform: scale(0.97); }
   .btn-open {
@@ -115,21 +128,22 @@
 
   /* КЛИКЕР */
   .clicker-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 10px 0; }
-  .clicker-info { text-align: center; font-size: 13px; color: #8888a8; line-height: 1.6; }
-  .clicker-info b { color: #fbbf24; font-size: 15px; }
+  .clicker-info { text-align: center; font-size: 14px; color: #8888a8; line-height: 1.6; }
+  .clicker-info b { color: #fbbf24; font-size: 16px; }
   .click-btn {
-    width: 220px; height: 220px; border-radius: 50%;
+    width: 240px; height: 240px; border-radius: 50%;
     border: 3px solid rgba(251, 191, 36, 0.45);
     background: radial-gradient(circle at 35% 30%, #fde68a 0%, #fbbf24 30%, #d97706 70%, #92400e 100%);
-    cursor: pointer; font-size: 90px; user-select: none;
+    cursor: pointer; font-size: 100px; user-select: none;
     box-shadow: 0 0 50px rgba(251, 191, 36, 0.45), 0 12px 30px rgba(0,0,0,0.5),
                 inset 0 -12px 25px rgba(0,0,0,0.35), inset 0 12px 25px rgba(255,255,255,0.35);
     transition: transform 0.08s;
+    -webkit-user-select: none; -webkit-touch-callout: none;
   }
   .click-btn:active { transform: scale(0.94); }
 
   .float-coin {
-    position: fixed; font-size: 22px; font-weight: 900; color: #fbbf24;
+    position: fixed; font-size: 24px; font-weight: 900; color: #fbbf24;
     text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 16px rgba(251,191,36,0.6);
     pointer-events: none; z-index: 300;
     animation: floatUp 0.9s ease-out forwards;
@@ -141,22 +155,22 @@
 
   /* ИНВЕНТАРЬ */
   .inv-header { display: flex; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
-  .inv-title { font-size: 15px; font-weight: 700; }
-  .inv-count { font-size: 12px; color: #7a7a9a; }
+  .inv-title { font-size: 16px; font-weight: 700; }
+  .inv-count { font-size: 13px; color: #7a7a9a; }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .item-slot {
     aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center;
     justify-content: center; cursor: pointer; position: relative; padding: 6px;
-    border: 1px solid rgba(255,255,255,0.15); transition: transform 0.15s, filter 0.2s;
+    border: 1px solid rgba(255,255,255,0.15); transition: transform 0.15s;
     overflow: hidden;
+    -webkit-user-select: none; user-select: none;
   }
   .item-slot:active { transform: scale(0.94); }
-  .item-slot:hover { filter: brightness(1.15); }
   .item-slot canvas { width: 100%; height: 100%; display: block; }
   .count-badge {
     position: absolute; top: 5px; right: 6px;
-    background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; font-weight: 800;
-    padding: 2px 6px; border-radius: 7px; z-index: 2;
+    background: rgba(0,0,0,0.7); color: #fff; font-size: 11px; font-weight: 800;
+    padding: 3px 7px; border-radius: 7px; z-index: 2;
   }
 
   .bg-common    { background: linear-gradient(160deg, #9ca3af, #6b7280); }
@@ -165,18 +179,18 @@
   .bg-legendary { background: linear-gradient(160deg, #fbbf24, #d97706); }
   .bg-mythic    { background: linear-gradient(160deg, #ef4444, #991b1b); }
 
-  .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
+  .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 14px; }
   .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
 
   /* ТОП */
   .lb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 2px; }
-  .lb-title { font-size: 15px; font-weight: 700; }
-  .lb-sub { font-size: 11px; color: #7a7a9a; }
+  .lb-title { font-size: 16px; font-weight: 700; }
+  .lb-sub { font-size: 12px; color: #7a7a9a; }
   .lb-list { display: flex; flex-direction: column; gap: 8px; }
   .lb-row {
     display: flex; align-items: center; gap: 12px;
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px; padding: 12px 14px;
+    border-radius: 12px; padding: 14px;
   }
   .lb-row.me {
     background: rgba(167,139,250,0.12);
@@ -184,33 +198,35 @@
     box-shadow: 0 0 20px rgba(167,139,250,0.15);
   }
   .lb-rank {
-    width: 34px; height: 34px; border-radius: 10px;
+    width: 40px; height: 40px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 14px;
+    font-weight: 900; font-size: 15px;
     background: rgba(255,255,255,0.06); flex-shrink: 0;
   }
   .lb-rank.gold   { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 16px rgba(251,191,36,0.5); }
   .lb-rank.silver { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: #1a1a2e; }
   .lb-rank.bronze { background: linear-gradient(135deg, #f59e0b, #92400e); color: #fff; }
-  .lb-name { flex: 1; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lb-value { font-size: 14px; font-weight: 800; color: #fbbf24; flex-shrink: 0; }
-  .lb-loading, .lb-empty { text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
+  .lb-name { flex: 1; font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-value { font-size: 15px; font-weight: 800; color: #fbbf24; flex-shrink: 0; }
+  .lb-loading, .lb-empty { text-align: center; padding: 40px 20px; color: #55557a; font-size: 14px; }
 
   /* ТРЕЙДЫ */
-  .trade-search {
-    display: flex; gap: 8px; margin-bottom: 16px;
-  }
+  .trade-search { display: flex; gap: 8px; margin-bottom: 16px; }
   .trade-search input {
-    flex: 1; padding: 12px 14px;
+    flex: 1; padding: 14px;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 11px; color: #fff; font-size: 14px; font-family: inherit;
+    border-radius: 11px; color: #fff; font-size: 16px; font-family: inherit;
+    min-height: 52px;
   }
   .trade-search input:focus { outline: none; border-color: #a855f7; }
   .trade-search button {
-    padding: 0 16px; border: none; border-radius: 11px;
+    padding: 0 20px; border: none; border-radius: 11px;
     background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff;
-    font-weight: 800; cursor: pointer; font-family: inherit; font-size: 14px;
+    font-weight: 800; cursor: pointer; font-family: inherit; font-size: 18px;
+    min-height: 52px; min-width: 52px;
+    -webkit-user-select: none; user-select: none;
   }
+  .trade-search button:active { transform: scale(0.96); }
   .trade-search button:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .trade-section-title {
@@ -222,45 +238,41 @@
   .player-row {
     display: flex; align-items: center; gap: 12px;
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+    border-radius: 12px; padding: 14px; margin-bottom: 8px;
   }
   .online-dot {
-    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
     background: #4ade80;
     box-shadow: 0 0 8px rgba(74,222,128,0.7);
   }
-  .online-dot.offline {
-    background: #6b7280;
-    box-shadow: none;
-  }
+  .online-dot.offline { background: #6b7280; box-shadow: none; }
   .player-row .player-name {
-    flex: 1; font-size: 14px; font-weight: 700;
+    flex: 1; font-size: 15px; font-weight: 700;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .player-row .trade-btn {
-    padding: 8px 14px; border: none; border-radius: 9px;
+    padding: 12px 18px; border: none; border-radius: 10px;
     background: linear-gradient(135deg, #10b981, #059669);
-    color: #fff; font-size: 12px; font-weight: 800;
+    color: #fff; font-size: 14px; font-weight: 800;
     cursor: pointer; font-family: inherit; flex-shrink: 0;
+    min-height: 44px;
+    -webkit-user-select: none; user-select: none;
   }
+  .player-row .trade-btn:active { transform: scale(0.96); }
   .player-row .trade-btn:disabled {
     background: rgba(107,114,128,0.3); color: #6b7280;
     cursor: not-allowed;
   }
 
-  /* МОДАЛКА ТРЕЙДА (окно обмена) */
+  /* МОДАЛКА ТРЕЙДА */
   .trade-modal {
     max-width: 460px; width: 100%;
     max-height: 90vh; overflow-y: auto;
     padding: 22px 18px; text-align: left;
   }
-  .trade-modal-head {
-    text-align: center; margin-bottom: 16px;
-  }
-  .trade-modal-title {
-    font-size: 18px; font-weight: 800; margin-bottom: 4px;
-  }
-  .trade-modal-sub { font-size: 12px; color: #7a7a9a; }
+  .trade-modal-head { text-align: center; margin-bottom: 16px; }
+  .trade-modal-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .trade-modal-sub { font-size: 13px; color: #7a7a9a; }
   .trade-cols {
     display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
     margin-bottom: 14px;
@@ -279,57 +291,55 @@
   .trade-items { display: flex; flex-direction: column; gap: 6px; }
   .trade-item {
     display: flex; align-items: center; gap: 8px;
-    background: rgba(0,0,0,0.25); border-radius: 8px; padding: 5px 7px;
+    background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px;
     cursor: pointer; transition: background 0.15s;
+    min-height: 44px;
+    -webkit-user-select: none; user-select: none;
   }
-  .trade-item:hover { background: rgba(239,68,68,0.15); }
+  .trade-item:active { background: rgba(239,68,68,0.15); }
   .trade-item.no-click { cursor: default; }
-  .trade-item.no-click:hover { background: rgba(0,0,0,0.25); }
+  .trade-item.no-click:active { background: rgba(0,0,0,0.25); }
   .trade-item-icon {
-    width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 7px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
   }
   .trade-item-icon canvas { width: 100%; height: 100%; display: block; }
   .trade-item-name {
-    font-size: 11px; font-weight: 700;
+    font-size: 12px; font-weight: 700;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     flex: 1;
   }
-  .trade-item-count { font-size: 11px; font-weight: 800; color: #fbbf24; }
+  .trade-item-count { font-size: 12px; font-weight: 800; color: #fbbf24; }
   .trade-empty {
-    font-size: 11px; color: #55557a; text-align: center; padding: 18px 4px;
+    font-size: 12px; color: #55557a; text-align: center; padding: 18px 4px;
   }
 
-  .trade-my-inv {
-    margin-bottom: 14px;
-  }
+  .trade-my-inv { margin-bottom: 14px; }
   .trade-my-inv .trade-inv-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
-    max-height: 160px; overflow-y: auto; padding-right: 4px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    max-height: 200px; overflow-y: auto; padding-right: 4px;
   }
   .trade-inv-slot {
-    aspect-ratio: 1; border-radius: 9px; cursor: pointer;
+    aspect-ratio: 1; border-radius: 10px; cursor: pointer;
     position: relative; overflow: hidden;
     border: 1px solid rgba(255,255,255,0.15);
     transition: transform 0.12s;
     display: flex; align-items: center; justify-content: center;
+    -webkit-user-select: none; user-select: none;
   }
   .trade-inv-slot:active { transform: scale(0.92); }
-  .trade-inv-slot:hover { filter: brightness(1.2); }
   .trade-inv-slot.disabled { opacity: 0.35; cursor: not-allowed; }
   .trade-inv-slot canvas { width: 100%; height: 100%; display: block; }
   .trade-inv-slot .slot-count {
-    position: absolute; top: 3px; right: 4px;
-    background: rgba(0,0,0,0.7); color: #fff;
-    font-size: 9px; font-weight: 800;
-    padding: 1px 5px; border-radius: 5px;
+    position: absolute; top: 4px; right: 5px;
+    background: rgba(0,0,0,0.75); color: #fff;
+    font-size: 10px; font-weight: 800;
+    padding: 2px 6px; border-radius: 6px;
   }
 
   .trade-actions { display: flex; gap: 8px; margin-top: 4px; }
-  .trade-actions .btn {
-    flex: 1; padding: 13px; font-size: 14px;
-  }
+  .trade-actions .btn { flex: 1; padding: 14px; font-size: 15px; }
   .btn-confirm {
     background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
@@ -343,8 +353,8 @@
     color: #f87171;
   }
   .trade-status {
-    text-align: center; font-size: 12px; color: #7a7a9a;
-    margin-bottom: 10px; min-height: 16px;
+    text-align: center; font-size: 13px; color: #7a7a9a;
+    margin-bottom: 10px; min-height: 18px;
   }
   .trade-status.yes { color: #4ade80; font-weight: 700; }
   .trade-status.warn { color: #fbbf24; font-weight: 700; }
@@ -354,7 +364,7 @@
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: linear-gradient(160deg, #1e1e32, #14141f);
     border: 1px solid rgba(167,139,250,0.5);
-    border-radius: 18px; padding: 16px 18px;
+    border-radius: 18px; padding: 18px;
     max-width: 400px; width: calc(100% - 32px);
     z-index: 400;
     box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 30px rgba(167,139,250,0.2);
@@ -364,16 +374,17 @@
     from { transform: translate(-50%, 100px); opacity: 0; }
     to { transform: translate(-50%, 0); opacity: 1; }
   }
-  .req-popup-title {
-    font-size: 14px; font-weight: 800; margin-bottom: 4px;
-  }
+  .req-popup-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
   .req-popup-title b { color: #a78bfa; }
-  .req-popup-sub { font-size: 12px; color: #7a7a9a; margin-bottom: 12px; }
+  .req-popup-sub { font-size: 13px; color: #7a7a9a; margin-bottom: 14px; }
   .req-popup-actions { display: flex; gap: 8px; }
   .req-popup-actions button {
-    flex: 1; padding: 10px; border: none; border-radius: 10px;
-    font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit;
+    flex: 1; padding: 14px; border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit;
+    min-height: 48px;
+    -webkit-user-select: none; user-select: none;
   }
+  .req-popup-actions button:active { transform: scale(0.96); }
   .btn-accept { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
   .btn-decline { background: rgba(239,68,68,0.2); color: #f87171; }
 
@@ -402,9 +413,9 @@
     60% { transform: scale(1.15) rotate(6deg); }
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
-  .modal-rarity { font-size: 12px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
-  .modal-name { font-size: 21px; font-weight: 800; margin-bottom: 6px; color: #fff; }
-  .modal-desc { font-size: 12px; color: #8888a8; font-style: italic; margin-bottom: 20px; min-height: 16px; }
+  .modal-rarity { font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .modal-name { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+  .modal-desc { font-size: 13px; color: #8888a8; font-style: italic; margin-bottom: 20px; min-height: 16px; }
   .btn-collect { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
   .btn-sell {
     background: linear-gradient(135deg, #10b981, #059669);
@@ -425,7 +436,7 @@
 
   .detail-row {
     display: flex; justify-content: space-between; padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 14px;
   }
   .detail-row:last-of-type { border-bottom: none; }
   .detail-label { color: #7a7a9a; }
@@ -447,21 +458,31 @@
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
   .auth-box .auth-sub { font-size: 11px; color: #6b6b8a; text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; }
-  .auth-tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 12px; margin-bottom: 18px; }
-  .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; color: #8888a8; }
+  .auth-tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.04); padding: 5px; border-radius: 12px; margin-bottom: 18px; }
+  .auth-tab {
+    flex: 1; padding: 13px; text-align: center; font-size: 14px;
+    font-weight: 700; border-radius: 8px; cursor: pointer; color: #8888a8;
+    min-height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-user-select: none; user-select: none;
+  }
   .auth-tab.active { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
   .auth-input {
-    width: 100%; padding: 13px 15px; margin-bottom: 10px;
+    width: 100%; padding: 15px; margin-bottom: 10px;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 11px; color: #fff; font-size: 14px; font-family: inherit;
+    border-radius: 11px; color: #fff; font-size: 16px; font-family: inherit;
+    min-height: 52px;
   }
   .auth-input:focus { outline: none; border-color: #a855f7; }
-  .auth-error { color: #f87171; font-size: 12px; text-align: center; min-height: 16px; margin-bottom: 10px; }
+  .auth-error { color: #f87171; font-size: 13px; text-align: center; min-height: 18px; margin-bottom: 10px; }
   .auth-submit {
-    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    width: 100%; padding: 16px; border: none; border-radius: 12px;
     background: linear-gradient(135deg, #7c3aed, #c026d3); color: #fff;
-    font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit;
+    font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit;
+    min-height: 54px;
+    -webkit-user-select: none; user-select: none;
   }
+  .auth-submit:active { transform: scale(0.98); }
   .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
   /* МОДАЛКА ЯЩИКА */
@@ -471,7 +492,7 @@
   }
   .crate-modal .crate-modal-head { text-align: center; margin-bottom: 18px; }
   .crate-modal .crate-modal-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
-  .crate-modal .crate-modal-price { font-size: 13px; color: #fbbf24; font-weight: 700; }
+  .crate-modal .crate-modal-price { font-size: 14px; color: #fbbf24; font-weight: 700; }
   .crate-modal .crate-modal-visual {
     font-size: 56px; text-align: center; margin-bottom: 8px;
     filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.55));
@@ -480,37 +501,99 @@
   .drop-row {
     display: flex; align-items: center; gap: 12px;
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px; padding: 10px;
+    border-radius: 12px; padding: 12px;
   }
   .drop-row .drop-icon {
-    width: 52px; height: 52px; border-radius: 12px;
+    width: 56px; height: 56px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); overflow: hidden;
   }
   .drop-row .drop-icon canvas { width: 100%; height: 100%; display: block; }
   .drop-row .drop-info { flex: 1; min-width: 0; }
   .drop-row .drop-name {
-    font-size: 14px; font-weight: 800; margin-bottom: 2px;
+    font-size: 15px; font-weight: 800; margin-bottom: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .drop-row .drop-rarity { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .drop-row .drop-rarity { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
   .drop-row .drop-stats { text-align: right; flex-shrink: 0; }
-  .drop-row .drop-chance { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.2; }
-  .drop-row .drop-value { font-size: 11px; color: #fbbf24; font-weight: 700; }
+  .drop-row .drop-chance { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.2; }
+  .drop-row .drop-value { font-size: 12px; color: #fbbf24; font-weight: 700; }
   .crate-modal .btn-open-from-modal {
-    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    width: 100%; padding: 16px; border: none; border-radius: 12px;
     background: linear-gradient(135deg, #7c3aed, #c026d3);
-    color: #fff; font-size: 15px; font-weight: 800; cursor: pointer;
+    color: #fff; font-size: 16px; font-weight: 800; cursor: pointer;
     font-family: inherit; margin-bottom: 8px;
+    min-height: 52px;
     transition: transform 0.12s, opacity 0.2s;
+    -webkit-user-select: none; user-select: none;
   }
   .crate-modal .btn-open-from-modal:active:not(:disabled) { transform: scale(0.97); }
   .crate-modal .btn-open-from-modal:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
   .crate-modal .btn-close-modal {
-    width: 100%; padding: 12px;
+    width: 100%; padding: 14px;
     border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
-    background: transparent; color: #8888a8; font-size: 14px; font-weight: 700;
+    background: transparent; color: #8888a8; font-size: 15px; font-weight: 700;
     cursor: pointer; font-family: inherit;
+    min-height: 48px;
+    -webkit-user-select: none; user-select: none;
+  }
+  .crate-modal .btn-close-modal:active { transform: scale(0.97); }
+
+  /* ==================== АДАПТИВ ПОД ТЕЛЕФОН ==================== */
+  @media (max-width: 480px) {
+    .app { padding: 12px 12px 90px; }
+    h1 { font-size: 18px; }
+    .tab { font-size: 9px; padding: 10px 1px; min-height: 48px; }
+    .click-btn { width: 200px; height: 200px; font-size: 80px; }
+    .grid { gap: 8px; }
+    .modal { padding: 22px 18px; }
+    .modal-item-box { width: 120px; height: 120px; }
+    .trade-modal { padding: 18px 14px; }
+    .trade-my-inv .trade-inv-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; }
+    .trade-cols { gap: 8px; }
+    .trade-col { padding: 8px; }
+    .crate-modal { padding: 18px 14px; }
+    .drop-row .drop-icon { width: 48px; height: 48px; }
+    .lb-rank { width: 36px; height: 36px; font-size: 14px; }
+  }
+
+  @media (max-width: 360px) {
+    h1 { font-size: 16px; }
+    .tab { font-size: 8px; }
+    .click-btn { width: 180px; height: 180px; font-size: 70px; }
+    .trade-my-inv .trade-inv-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ==================== ПЛАНШЕТ ==================== */
+  @media (min-width: 768px) {
+    .app { max-width: 640px; padding: 24px 24px 100px; }
+    h1 { font-size: 28px; }
+    .subtitle { font-size: 12px; }
+    .tab { font-size: 12px; padding: 14px 4px; }
+    .click-btn { width: 280px; height: 280px; font-size: 120px; }
+    .grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .modal { max-width: 420px; padding: 32px 26px; }
+    .modal-item-box { width: 170px; height: 170px; }
+    .trade-modal { max-width: 600px; }
+    .trade-my-inv .trade-inv-grid { grid-template-columns: repeat(6, 1fr); }
+    .crate-modal { max-width: 520px; }
+    .drop-row .drop-icon { width: 64px; height: 64px; }
+    .lb-rank { width: 44px; height: 44px; font-size: 16px; }
+    .balance { font-size: 18px; padding: 16px 20px; }
+  }
+
+  @media (min-width: 1024px) {
+    .app { max-width: 720px; }
+  }
+
+  /* Отключаем hover-эффекты на тач-устройствах */
+  @media (hover: none) {
+    .crate-card:hover { border-color: rgba(255,255,255,0.1); }
+    .item-slot:hover { filter: none; }
+    .trade-item:hover { background: rgba(0,0,0,0.25); }
+    .trade-inv-slot:hover { filter: none; }
+    .fs-btn:hover { background: rgba(255,255,255,0.06); }
+    .logout-btn:hover { background: rgba(239,68,68,0.15); }
   }
 </style>
 </head><body>
@@ -766,11 +849,11 @@ function drawAIEye(ctx) {
   </div>
 
   <div class="tabs">
-    <div class="tab active" data-view="shop">🛒 Магазин</div>
-    <div class="tab" data-view="earn">💰 Заработок</div>
-    <div class="tab" data-view="inv">🎒 Инвентарь</div>
-    <div class="tab" data-view="trade">🔄 Трейды</div>
-    <div class="tab" data-view="top">🏆 Топ</div>
+    <div class="tab active" data-view="shop">🛒<br>Магазин</div>
+    <div class="tab" data-view="earn">💰<br>Заработок</div>
+    <div class="tab" data-view="inv">🎒<br>Инвентарь</div>
+    <div class="tab" data-view="trade">🔄<br>Трейды</div>
+    <div class="tab" data-view="top">🏆<br>Топ</div>
   </div>
 
   <div class="view active" id="view-shop">
@@ -797,7 +880,7 @@ function drawAIEye(ctx) {
 
   <div class="view" id="view-trade">
     <div class="trade-search">
-      <input id="tradeSearchInput" placeholder="Найти игрока по нику..." maxlength="20">
+      <input id="tradeSearchInput" placeholder="Найти игрока..." maxlength="20">
       <button id="tradeSearchBtn" onclick="searchPlayer()">🔍</button>
     </div>
     <div id="tradeSearchResult"></div>
@@ -864,9 +947,7 @@ function drawAIEye(ctx) {
       <div class="trade-modal-title">🔄 Обмен</div>
       <div class="trade-modal-sub" id="tradeSubtitle">—</div>
     </div>
-
     <div class="trade-status" id="tradeStatus">Выбери предметы слева, потом жми «Подтвердить»</div>
-
     <div class="trade-cols">
       <div class="trade-col">
         <div class="trade-col-title mine" id="tradeMineTitle">🟢 Ты</div>
@@ -877,12 +958,10 @@ function drawAIEye(ctx) {
         <div class="trade-items" id="tradeOtherItems"><div class="trade-empty">Пусто</div></div>
       </div>
     </div>
-
     <div class="trade-my-inv">
       <div class="trade-section-title">Твой инвентарь</div>
       <div class="trade-inv-grid" id="tradeInvGrid"></div>
     </div>
-
     <div class="trade-actions">
       <button class="btn btn-cancel" onclick="cancelTrade()">Отменить</button>
       <button class="btn btn-confirm" id="tradeConfirmBtn" onclick="confirmTrade()">Подтвердить</button>
@@ -891,6 +970,29 @@ function drawAIEye(ctx) {
 </div>
 
 <script>
+/* ==================== ОПРЕДЕЛЕНИЕ УСТРОЙСТВА ==================== */
+function detectDevice() {
+  const w = window.innerWidth;
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  document.body.classList.remove('mobile', 'tablet', 'desktop');
+
+  if (w < 768) {
+    document.body.classList.add('mobile');
+  } else if (w < 1024) {
+    document.body.classList.add('tablet');
+  } else {
+    document.body.classList.add('desktop');
+  }
+
+  if (isTouch) document.body.classList.add('touch');
+  else document.body.classList.add('no-touch');
+}
+
+detectDevice();
+window.addEventListener('resize', detectDevice);
+window.addEventListener('orientationchange', () => setTimeout(detectDevice, 100));
+
 /* ==================== СОСТОЯНИЕ ==================== */
 let state = {
   user: null,
@@ -1064,7 +1166,11 @@ function spawnFloatCoin(e) {
   const el = document.createElement('div');
   el.className = 'float-coin';
   el.textContent = '+2';
-  let x = e?.clientX, y = e?.clientY;
+  let x, y;
+  if (e && (e.clientX || e.touches)) {
+    x = e.clientX || (e.touches && e.touches[0]?.clientX);
+    y = e.clientY || (e.touches && e.touches[0]?.clientY);
+  }
   if (!x) {
     const rect = document.getElementById('clickBtn').getBoundingClientRect();
     x = rect.left + rect.width / 2;
@@ -1221,8 +1327,6 @@ let pendingRequest = null;
 
 function initSocket() {
   socket = io();
-
-  // ✅ Сервер сам читает cookie при подключении — ничего отправлять не нужно
 
   socket.on('connect', () => {
     console.log('🔌 Socket подключён:', socket.id);
@@ -1503,7 +1607,7 @@ function closeTradeModal() {
   document.getElementById('tradeModal').classList.remove('show');
   state.currentTrade = null;
 }
-
+</script><script>
 /* ==================== ПОЛНЫЙ ЭКРАН ==================== */
 function toggleFullscreen() {
   if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
@@ -1523,8 +1627,16 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-document.getElementById('clickBtn').addEventListener('click', handleClick);
+/* ==================== КНОПКА КЛИКА ==================== */
+const clickBtn = document.getElementById('clickBtn');
+clickBtn.addEventListener('click', handleClick);
+clickBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  handleClick({ clientX: touch.clientX, clientY: touch.clientY });
+}, { passive: false });
 
+/* ==================== ЗАКРЫТИЕ МОДАЛОК ПО ФОНУ ==================== */
 document.getElementById('crateModal').addEventListener('click', (e) => {
   if (e.target.id === 'crateModal') closeCrateModal();
 });
@@ -1536,6 +1648,18 @@ document.getElementById('itemModal').addEventListener('click', (e) => {
 document.getElementById('tradeModal').addEventListener('click', (e) => {
   if (e.target.id === 'tradeModal') cancelTrade();
 });
+
+document.getElementById('dropModal').addEventListener('click', (e) => {
+  if (e.target.id === 'dropModal') closeDrop();
+});
+
+/* ==================== ЗАПРЕТ ЗУМА ДВОЙНЫМ ТАПОМ ==================== */
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
 
 /* ==================== СТАРТ ==================== */
 (async () => {
