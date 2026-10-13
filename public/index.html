@@ -44,12 +44,12 @@
   }
 
   .tabs {
-    display: flex; gap: 6px; background: rgba(255,255,255,0.04);
+    display: flex; gap: 5px; background: rgba(255,255,255,0.04);
     padding: 5px; border-radius: 14px; margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.06);
   }
   .tab {
-    flex: 1; padding: 11px 6px; text-align: center; font-size: 12px;
+    flex: 1; padding: 11px 4px; text-align: center; font-size: 11px;
     font-weight: 600; border-radius: 10px; cursor: pointer;
     color: #8888a8; transition: all 0.2s; user-select: none;
   }
@@ -69,9 +69,7 @@
     font-weight: 700; font-size: 15px; color: #fbbf24;
   }
 
-  /* ---------- СПИСОК ЯЩИКОВ ---------- */
   .crate-list { display: flex; flex-direction: column; gap: 14px; }
-
   .crate-card {
     background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
     border: 1px solid rgba(255,255,255,0.1);
@@ -124,7 +122,6 @@
   }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
 
-  /* КЛИКЕР */
   .clicker-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 10px 0; }
   .clicker-info { text-align: center; font-size: 13px; color: #8888a8; line-height: 1.6; }
   .clicker-info b { color: #fbbf24; font-size: 15px; }
@@ -150,7 +147,6 @@
     100% { opacity: 0; transform: translate(-50%, -90px) scale(1.4); }
   }
 
-  /* ИНВЕНТАРЬ */
   .inv-header { display: flex; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
   .inv-title { font-size: 15px; font-weight: 700; }
   .inv-count { font-size: 12px; color: #7a7a9a; }
@@ -178,6 +174,53 @@
 
   .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
   .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+
+  /* ЛИДЕРБОРД */
+  .lb-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding: 0 2px;
+  }
+  .lb-title { font-size: 15px; font-weight: 700; }
+  .lb-sub { font-size: 11px; color: #7a7a9a; }
+
+  .lb-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .lb-row {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition: background 0.2s;
+  }
+  .lb-row.me {
+    background: rgba(167,139,250,0.12);
+    border-color: rgba(167,139,250,0.4);
+    box-shadow: 0 0 20px rgba(167,139,250,0.15);
+  }
+  .lb-rank {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 14px;
+    background: rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .lb-rank.gold   { background: linear-gradient(135deg, #fbbf24, #d97706); color: #fff; box-shadow: 0 0 16px rgba(251,191,36,0.5); }
+  .lb-rank.silver { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: #1a1a2e; }
+  .lb-rank.bronze { background: linear-gradient(135deg, #f59e0b, #92400e); color: #fff; }
+
+  .lb-name {
+    flex: 1; font-size: 14px; font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .lb-value {
+    font-size: 14px; font-weight: 800; color: #fbbf24;
+    flex-shrink: 0;
+  }
+
+  .lb-loading, .lb-empty {
+    text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px;
+  }
 
   /* МОДАЛКА */
   .modal-overlay {
@@ -208,6 +251,16 @@
   .modal-name { font-size: 21px; font-weight: 800; margin-bottom: 6px; color: #fff; }
   .modal-desc { font-size: 12px; color: #8888a8; font-style: italic; margin-bottom: 20px; min-height: 16px; }
   .btn-collect { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
+  .btn-sell {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff; margin-bottom: 8px;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.35);
+  }
+  .btn-close-item {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #8888a8;
+  }
 
   .t-common    { color: #b8b8d0; }
   .t-uncommon  { color: #38bdf8; }
@@ -223,7 +276,6 @@
   .detail-label { color: #7a7a9a; }
   .detail-value { font-weight: 700; }
 
-  /* АВТОРИЗАЦИЯ */
   .auth-screen {
     position: fixed; inset: 0; background: radial-gradient(circle at 50% 30%, #1a1a2e, #000);
     display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px;
@@ -256,119 +308,62 @@
   }
   .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ---------- МОДАЛКА ЯЩИКА ---------- */
+  /* МОДАЛКА ЯЩИКА */
   .crate-modal {
-    max-width: 420px;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 24px 20px;
-    text-align: left;
+    max-width: 420px; max-height: 85vh; overflow-y: auto;
+    padding: 24px 20px; text-align: left;
   }
-  .crate-modal .crate-modal-head {
-    text-align: center;
-    margin-bottom: 18px;
-  }
-  .crate-modal .crate-modal-title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 4px;
-  }
-  .crate-modal .crate-modal-price {
-    font-size: 13px;
-    color: #fbbf24;
-    font-weight: 700;
-  }
+  .crate-modal .crate-modal-head { text-align: center; margin-bottom: 18px; }
+  .crate-modal .crate-modal-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .crate-modal .crate-modal-price { font-size: 13px; color: #fbbf24; font-weight: 700; }
   .crate-modal .crate-modal-visual {
-    font-size: 56px;
-    text-align: center;
-    margin-bottom: 8px;
+    font-size: 56px; text-align: center; margin-bottom: 8px;
     filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.55));
   }
 
   .drop-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
   .drop-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex; align-items: center; gap: 12px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 12px;
     padding: 10px;
   }
   .drop-row .drop-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 18px;
-    color: #fff;
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #fff;
     text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     flex-shrink: 0;
     border: 1px solid rgba(255,255,255,0.15);
   }
   .drop-row .drop-info { flex: 1; min-width: 0; }
   .drop-row .drop-name {
-    font-size: 14px;
-    font-weight: 800;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 14px; font-weight: 800; margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .drop-row .drop-rarity {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
     text-transform: uppercase;
   }
-  .drop-row .drop-stats {
-    text-align: right;
-    flex-shrink: 0;
-  }
-  .drop-row .drop-chance {
-    font-size: 14px;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1.2;
-  }
-  .drop-row .drop-value {
-    font-size: 11px;
-    color: #fbbf24;
-    font-weight: 700;
-  }
+  .drop-row .drop-stats { text-align: right; flex-shrink: 0; }
+  .drop-row .drop-chance { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.2; }
+  .drop-row .drop-value { font-size: 11px; color: #fbbf24; font-weight: 700; }
 
   .crate-modal .btn-open-from-modal {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
     background: linear-gradient(135deg, #7c3aed, #c026d3);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-    margin-bottom: 8px;
+    color: #fff; font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: inherit; margin-bottom: 8px;
     transition: transform 0.12s, opacity 0.2s;
   }
   .crate-modal .btn-open-from-modal:active:not(:disabled) { transform: scale(0.97); }
-  .crate-modal .btn-open-from-modal:disabled {
-    opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6);
-  }
+  .crate-modal .btn-open-from-modal:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
   .crate-modal .btn-close-modal {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    background: transparent;
-    color: #8888a8;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
+    width: 100%; padding: 12px;
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+    background: transparent; color: #8888a8; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
   }
 </style>
 </head>
@@ -410,6 +405,7 @@
     <div class="tab active" data-view="shop">🛒 Магазин</div>
     <div class="tab" data-view="earn">💰 Заработок</div>
     <div class="tab" data-view="inv">🎒 Инвентарь</div>
+    <div class="tab" data-view="top">🏆 Топ</div>
   </div>
 
   <div class="view active" id="view-shop">
@@ -433,6 +429,16 @@
     </div>
     <div class="grid" id="invGrid"></div>
   </div>
+
+  <div class="view" id="view-top">
+    <div class="lb-header">
+      <div class="lb-title">🏆 Топ игроков</div>
+      <div class="lb-sub">по стоимости инвентаря</div>
+    </div>
+    <div class="lb-list" id="lbList">
+      <div class="lb-loading">Загрузка...</div>
+    </div>
+  </div>
 </div>
 
 <!-- МОДАЛКА ВЫПАДЕНИЯ -->
@@ -455,11 +461,12 @@
     <div class="modal-desc" id="itemDesc">—</div>
     <div class="detail-row"><span class="detail-label">Стоимость</span><span class="detail-value" id="itemValue">—</span></div>
     <div class="detail-row"><span class="detail-label">В инвентаре</span><span class="detail-value" id="itemCount">×0</span></div>
-    <button class="btn btn-collect" style="margin-top:16px" onclick="closeItem()">Закрыть</button>
+    <button class="btn btn-sell" id="itemSellBtn" onclick="sellCurrentItem()">Продать</button>
+    <button class="btn btn-close-item" onclick="closeItem()">Закрыть</button>
   </div>
 </div>
 
-<!-- МОДАЛКА ЯЩИКА (шансы) -->
+<!-- МОДАЛКА ЯЩИКА -->
 <div class="modal-overlay" id="crateModal">
   <div class="modal crate-modal">
     <div class="crate-modal-visual" id="cmVisual">📦</div>
@@ -477,7 +484,9 @@
 /* ==================== СОСТОЯНИЕ ==================== */
 let state = {
   user: null,
-  gameData: null
+  gameData: null,
+  currentItemId: null,
+  leaderboardLoaded: false
 };
 
 /* ==================== API ==================== */
@@ -559,6 +568,9 @@ function updateUI() {
 
   renderCrates();
   renderInventory();
+
+  // Сбрасываем кэш лидерборда — при следующем заходе перезагрузится
+  state.leaderboardLoaded = false;
 }
 
 function renderCrates() {
@@ -594,7 +606,7 @@ function renderInventory() {
     return;
   }
 
-  const { ITEMS, RARITIES } = state.gameData;
+  const { ITEMS } = state.gameData;
   const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
   entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
 
@@ -679,6 +691,7 @@ function closeDrop() {
 function showItem(id) {
   const item = state.gameData.ITEMS[id];
   const r = state.gameData.RARITIES[item.rarity];
+  state.currentItemId = id;
 
   const box = document.getElementById('itemBox');
   box.className = 'modal-item-box bg-' + item.rarity;
@@ -692,11 +705,53 @@ function showItem(id) {
   document.getElementById('itemDesc').textContent = item.desc;
   document.getElementById('itemValue').textContent = item.value + ' 🪙';
   document.getElementById('itemCount').textContent = '×' + (state.user.inventory[id] || 0);
+
+  const sellBtn = document.getElementById('itemSellBtn');
+  sellBtn.textContent = `Продать за ${item.value} 🪙`;
+  sellBtn.disabled = !state.user.inventory[id];
+
   document.getElementById('itemModal').classList.add('show');
 }
 
 function closeItem() {
   document.getElementById('itemModal').classList.remove('show');
+  state.currentItemId = null;
+}
+
+async function sellCurrentItem() {
+  const id = state.currentItemId;
+  if (!id) return;
+
+  const item = state.gameData.ITEMS[id];
+  if (!state.user.inventory[id]) return;
+
+  try {
+    const data = await api('/api/sell-item', { method: 'POST', body: { itemId: id } });
+    state.user = data.user;
+    updateUI();
+
+    // Обновляем данные в модалке
+    const left = state.user.inventory[id] || 0;
+    if (left === 0) {
+      closeItem();
+    } else {
+      document.getElementById('itemCount').textContent = '×' + left;
+      const sellBtn = document.getElementById('itemSellBtn');
+      sellBtn.disabled = false;
+    }
+
+    // Показываем эффект +X монет
+    const reward = document.createElement('div');
+    reward.className = 'float-coin';
+    reward.textContent = '+' + item.value;
+    reward.style.left = window.innerWidth / 2 + 'px';
+    reward.style.top = window.innerHeight / 2 + 'px';
+    document.body.appendChild(reward);
+    setTimeout(() => reward.remove(), 900);
+
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
 /* ==================== МОДАЛКА ЯЩИКА ==================== */
@@ -751,6 +806,41 @@ function closeCrateModal() {
   document.getElementById('crateModal').classList.remove('show');
 }
 
+/* ==================== ТОП ИГРОКОВ ==================== */
+async function loadLeaderboard() {
+  const list = document.getElementById('lbList');
+  list.innerHTML = `<div class="lb-loading">Загрузка...</div>`;
+
+  try {
+    const data = await api('/api/leaderboard');
+    const { leaderboard, me } = data;
+
+    if (!leaderboard.length) {
+      list.innerHTML = `<div class="lb-empty">Пока никто не играл 😴</div>`;
+      return;
+    }
+
+    list.innerHTML = leaderboard.map(p => {
+      const isMe = p.id === me;
+      let rankClass = '';
+      if (p.rank === 1) rankClass = 'gold';
+      else if (p.rank === 2) rankClass = 'silver';
+      else if (p.rank === 3) rankClass = 'bronze';
+
+      return `
+        <div class="lb-row ${isMe ? 'me' : ''}">
+          <div class="lb-rank ${rankClass}">${p.rank}</div>
+          <div class="lb-name">${p.username}${isMe ? ' (ты)' : ''}</div>
+          <div class="lb-value">${p.totalValue.toLocaleString('ru')} 🪙</div>
+        </div>`;
+    }).join('');
+
+    state.leaderboardLoaded = true;
+  } catch (e) {
+    list.innerHTML = `<div class="lb-empty">Не удалось загрузить 😢<br>${e.message}</div>`;
+  }
+}
+
 /* ==================== ПОЛНЫЙ ЭКРАН ==================== */
 function toggleFullscreen() {
   if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
@@ -763,15 +853,24 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     tab.classList.add('active');
-    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    const viewId = 'view-' + tab.dataset.view;
+    document.getElementById(viewId).classList.add('active');
+
+    // При заходе на вкладку "Топ" — загружаем лидерборд
+    if (tab.dataset.view === 'top') {
+      loadLeaderboard();
+    }
   });
 });
 
 document.getElementById('clickBtn').addEventListener('click', handleClick);
 
-// Закрытие модалки ящика кликом по фону
 document.getElementById('crateModal').addEventListener('click', (e) => {
   if (e.target.id === 'crateModal') closeCrateModal();
+});
+
+document.getElementById('itemModal').addEventListener('click', (e) => {
+  if (e.target.id === 'itemModal') closeItem();
 });
 
 /* ==================== СТАРТ ==================== */
@@ -781,7 +880,7 @@ document.getElementById('crateModal').addEventListener('click', (e) => {
     state.user = data.user;
     onLoggedIn();
   } catch {
-    // не залогинен — показываем экран входа
+    // не залогинен
   }
 })();
 </script>
