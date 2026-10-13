@@ -154,16 +154,20 @@
   .item-slot {
     aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center;
     justify-content: center; cursor: pointer; position: relative; padding: 6px;
-    font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.15); transition: transform 0.15s, filter 0.2s;
+    overflow: hidden;
   }
   .item-slot:active { transform: scale(0.94); }
   .item-slot:hover { filter: brightness(1.15); }
-  .item-text { font-size: 26px; font-weight: 900; line-height: 1; text-align: center; word-break: break-word; }
+  .item-slot canvas {
+    width: 100%; height: 100%;
+    display: block;
+  }
   .count-badge {
     position: absolute; top: 5px; right: 6px;
-    background: rgba(0,0,0,0.55); font-size: 10px; font-weight: 800;
+    background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; font-weight: 800;
     padding: 2px 6px; border-radius: 7px; text-shadow: none;
+    z-index: 2;
   }
 
   .bg-common    { background: linear-gradient(160deg, #9ca3af, #6b7280); }
@@ -175,7 +179,6 @@
   .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px; }
   .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
 
-  /* ЛИДЕРБОРД */
   .lb-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 14px; padding: 0 2px;
@@ -222,7 +225,6 @@
     text-align: center; padding: 40px 20px; color: #55557a; font-size: 13px;
   }
 
-  /* МОДАЛКА */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
     display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
@@ -235,12 +237,16 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.7);
   }
   .modal-item-box {
-    width: 130px; height: 130px; border-radius: 22px; margin: 0 auto 16px;
+    width: 150px; height: 150px; border-radius: 22px; margin: 0 auto 16px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 54px; font-weight: 900; color: #fff;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.2);
     animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .modal-item-box canvas {
+    width: 100%; height: 100%;
+    display: block;
   }
   @keyframes pop {
     0% { transform: scale(0.2) rotate(-25deg); opacity: 0; }
@@ -308,7 +314,6 @@
   }
   .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* МОДАЛКА ЯЩИКА */
   .crate-modal {
     max-width: 420px; max-height: 85vh; overflow-y: auto;
     padding: 24px 20px; text-align: left;
@@ -332,10 +337,13 @@
   .drop-row .drop-icon {
     width: 52px; height: 52px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 18px; color: #fff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     flex-shrink: 0;
     border: 1px solid rgba(255,255,255,0.15);
+    overflow: hidden;
+  }
+  .drop-row .drop-icon canvas {
+    width: 100%; height: 100%;
+    display: block;
   }
   .drop-row .drop-info { flex: 1; min-width: 0; }
   .drop-row .drop-name {
@@ -368,6 +376,451 @@
 </style>
 </head>
 <body>
+
+<!-- ============ РИСОВАЛКИ ПРЕДМЕТОВ ============ -->
+<script>
+/* Утилита: скруглённый прямоугольник */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+/* Главная функция: рисует предмет на canvas */
+function drawItem(canvas, itemId) {
+  const size = 128;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+
+  switch (itemId) {
+    case 'item_gray_ball': drawGrayBall(ctx); break;
+    case 'item_68':        draw68(ctx); break;
+    case 'item_1722':      draw1722(ctx); break;
+    case 'ai_dropout':     drawAIDropout(ctx); break;
+    case 'ai_prompts':     drawAIPrompts(ctx); break;
+    case 'ai_cyber_brain': drawAIBrain(ctx); break;
+    case 'ai_quantum':     drawAIQuantum(ctx); break;
+    case 'ai_eye':         drawAIEye(ctx); break;
+    default:
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 40px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('?', 64, 64);
+  }
+}
+
+/* --- Серый шар --- */
+function drawGrayBall(ctx) {
+  const cx = 64, cy = 62, r = 38;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + 40, 28, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const grad = ctx.createRadialGradient(cx - 14, cy - 14, 5, cx, cy, r);
+  grad.addColorStop(0, '#f5f5fa');
+  grad.addColorStop(0.4, '#b8b8c4');
+  grad.addColorStop(1, '#5a5a6e');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.beginPath();
+  ctx.ellipse(cx - 13, cy - 15, 11, 7, -0.6, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.beginPath();
+  ctx.arc(cx - 8, cy - 20, 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/* --- 68 --- */
+function draw68(ctx) {
+  ctx.shadowColor = 'rgba(56, 189, 248, 0.9)';
+  ctx.shadowBlur = 18;
+
+  ctx.font = 'bold 58px "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = '#0c4a6e';
+  ctx.strokeText('68', 64, 68);
+
+  const grad = ctx.createLinearGradient(0, 35, 0, 100);
+  grad.addColorStop(0, '#bae6fd');
+  grad.addColorStop(0.5, '#38bdf8');
+  grad.addColorStop(1, '#0369a1');
+  ctx.fillStyle = grad;
+  ctx.fillText('68', 64, 68);
+
+  ctx.shadowBlur = 0;
+}
+
+/* --- 1722 --- */
+function draw1722(ctx) {
+  ctx.shadowColor = 'rgba(244, 114, 182, 0.9)';
+  ctx.shadowBlur = 16;
+
+  ctx.font = 'bold 34px "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#831843';
+  ctx.strokeText('1722', 64, 66);
+
+  const grad = ctx.createLinearGradient(0, 40, 0, 95);
+  grad.addColorStop(0, '#fbcfe8');
+  grad.addColorStop(0.5, '#f472b6');
+  grad.addColorStop(1, '#9f1239');
+  ctx.fillStyle = grad;
+  ctx.fillText('1722', 64, 66);
+
+  ctx.shadowBlur = 0;
+}
+
+/* --- AI? (нейросеть-двоечник) --- */
+function drawAIDropout(ctx) {
+  // Тень головы
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(64, 108, 30, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Корпус головы
+  const grad = ctx.createLinearGradient(0, 26, 0, 102);
+  grad.addColorStop(0, '#cbd5e1');
+  grad.addColorStop(1, '#64748b');
+  ctx.fillStyle = grad;
+  roundRect(ctx, 24, 24, 80, 80, 14);
+  ctx.fill();
+
+  // Обводка
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 3;
+  roundRect(ctx, 24, 24, 80, 80, 14);
+  ctx.stroke();
+
+  // Антенна
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(64, 24);
+  ctx.lineTo(64, 12);
+  ctx.stroke();
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(64, 10, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Левый глаз — крестик (типа сломан)
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(40, 48);
+  ctx.lineTo(52, 60);
+  ctx.moveTo(52, 48);
+  ctx.lineTo(40, 60);
+  ctx.stroke();
+
+  // Правый глаз — точка + кружок
+  ctx.fillStyle = '#1f2937';
+  ctx.beginPath();
+  ctx.arc(78, 54, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(78, 54, 9, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Рот — грустная дуга
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(50, 86);
+  ctx.quadraticCurveTo(64, 78, 78, 86);
+  ctx.stroke();
+
+  // "AI?" сверху
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('AI?', 64, 116);
+}
+
+/* --- Флешка (512) --- */
+function drawAIPrompts(ctx) {
+  // Тень
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(64, 108, 28, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Металлический разъём сверху
+  const gradMetal = ctx.createLinearGradient(0, 18, 0, 40);
+  gradMetal.addColorStop(0, '#f1f5f9');
+  gradMetal.addColorStop(1, '#94a3b8');
+  ctx.fillStyle = gradMetal;
+  roundRect(ctx, 48, 18, 32, 22, 3);
+  ctx.fill();
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 48, 18, 32, 22, 3);
+  ctx.stroke();
+
+  // Контакты разъёма
+  ctx.fillStyle = '#fbbf24';
+  ctx.fillRect(53, 24, 4, 10);
+  ctx.fillRect(60, 24, 4, 10);
+  ctx.fillRect(67, 24, 4, 10);
+
+  // Корпус
+  const grad = ctx.createLinearGradient(0, 40, 0, 108);
+  grad.addColorStop(0, '#38bdf8');
+  grad.addColorStop(1, '#0369a1');
+  ctx.fillStyle = grad;
+  roundRect(ctx, 30, 38, 68, 70, 8);
+  ctx.fill();
+
+  // Обводка
+  ctx.strokeStyle = '#0c4a6e';
+  ctx.lineWidth = 3;
+  roundRect(ctx, 30, 38, 68, 70, 8);
+  ctx.stroke();
+
+  // Блик на корпусе
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  roundRect(ctx, 36, 44, 20, 58, 5);
+  ctx.fill();
+
+  // Текст 512
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 4;
+  ctx.fillText('512', 64, 74);
+  ctx.shadowBlur = 0;
+}
+
+/* --- Мозг-киборг (CPU) --- */
+function drawAIBrain(ctx) {
+  // Ножки чипа (снизу рисуем чтобы были под корпусом)
+  ctx.fillStyle = '#fbcfe8';
+  for (let i = 0; i < 4; i++) {
+    ctx.fillRect(40 + i * 14, 20, 8, 12);
+    ctx.fillRect(40 + i * 14, 96, 8, 12);
+    ctx.fillRect(20, 40 + i * 14, 12, 8);
+    ctx.fillRect(96, 40 + i * 14, 12, 8);
+  }
+
+  // Корпус чипа
+  const grad = ctx.createLinearGradient(0, 30, 0, 100);
+  grad.addColorStop(0, '#f472b6');
+  grad.addColorStop(1, '#be185d');
+  ctx.fillStyle = grad;
+  roundRect(ctx, 30, 30, 68, 68, 8);
+  ctx.fill();
+
+  ctx.strokeStyle = '#831843';
+  ctx.lineWidth = 3;
+  roundRect(ctx, 30, 30, 68, 68, 8);
+  ctx.stroke();
+
+  // Внутренний квадрат
+  ctx.strokeStyle = '#fbcfe8';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 42, 42, 44, 44, 4);
+  ctx.stroke();
+
+  // Мозговые извилины (волнистые линии)
+  ctx.strokeStyle = '#fbcfe8';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(48, 54);
+  ctx.quadraticCurveTo(58, 48, 64, 54);
+  ctx.quadraticCurveTo(72, 60, 80, 54);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(48, 66);
+  ctx.quadraticCurveTo(58, 60, 64, 66);
+  ctx.quadraticCurveTo(72, 72, 80, 66);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(48, 78);
+  ctx.quadraticCurveTo(58, 72, 64, 78);
+  ctx.quadraticCurveTo(72, 84, 80, 78);
+  ctx.stroke();
+}
+
+/* --- Квантовый чип (QBT) --- */
+function drawAIQuantum(ctx) {
+  const cx = 64, cy = 64;
+
+  // Сияние
+  const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 55);
+  glow.addColorStop(0, 'rgba(251, 191, 36, 0.55)');
+  glow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Куб (изометрия) — три грани
+  const topGrad = ctx.createLinearGradient(0, 30, 0, 55);
+  topGrad.addColorStop(0, '#fef3c7');
+  topGrad.addColorStop(1, '#fbbf24');
+  ctx.fillStyle = topGrad;
+  ctx.beginPath();
+  ctx.moveTo(64, 26);
+  ctx.lineTo(96, 44);
+  ctx.lineTo(64, 62);
+  ctx.lineTo(32, 44);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#92400e';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Левая грань
+  const leftGrad = ctx.createLinearGradient(0, 62, 0, 100);
+  leftGrad.addColorStop(0, '#f59e0b');
+  leftGrad.addColorStop(1, '#b45309');
+  ctx.fillStyle = leftGrad;
+  ctx.beginPath();
+  ctx.moveTo(32, 44);
+  ctx.lineTo(64, 62);
+  ctx.lineTo(64, 100);
+  ctx.lineTo(32, 82);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#92400e';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Правая грань
+  const rightGrad = ctx.createLinearGradient(0, 62, 0, 100);
+  rightGrad.addColorStop(0, '#d97706');
+  rightGrad.addColorStop(1, '#78350f');
+  ctx.fillStyle = rightGrad;
+  ctx.beginPath();
+  ctx.moveTo(96, 44);
+  ctx.lineTo(96, 82);
+  ctx.lineTo(64, 100);
+  ctx.lineTo(64, 62);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#92400e';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Молния на передней грани
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = 'rgba(255,255,255,0.8)';
+  ctx.shadowBlur = 6;
+  ctx.beginPath();
+  ctx.moveTo(70, 66);
+  ctx.lineTo(60, 78);
+  ctx.lineTo(70, 78);
+  ctx.lineTo(58, 96);
+  ctx.lineTo(68, 82);
+  ctx.lineTo(58, 82);
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+/* --- Око ИИ (EYE) --- */
+function drawAIEye(ctx) {
+  const cx = 64, cy = 64;
+
+  // Внешнее сияние
+  const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 60);
+  glow.addColorStop(0, 'rgba(239, 68, 68, 0.7)');
+  glow.addColorStop(1, 'rgba(239, 68, 68, 0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Форма глаза (миндалевидная) — внешний контур
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.moveTo(14, 64);
+  ctx.quadraticCurveTo(64, 16, 114, 64);
+  ctx.quadraticCurveTo(64, 112, 14, 64);
+  ctx.closePath();
+  ctx.fill();
+
+  // Обводка глаза
+  ctx.strokeStyle = '#7f1d1d';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Радужка
+  const irisGrad = ctx.createRadialGradient(cx - 4, cy - 4, 3, cx, cy, 24);
+  irisGrad.addColorStop(0, '#fca5a5');
+  irisGrad.addColorStop(0.5, '#ef4444');
+  irisGrad.addColorStop(1, '#7f1d1d');
+  ctx.fillStyle = irisGrad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Радиальные линии в радужке
+  ctx.strokeStyle = 'rgba(127, 29, 29, 0.6)';
+  ctx.lineWidth = 1.5;
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * 8, cy + Math.sin(angle) * 8);
+    ctx.lineTo(cx + Math.cos(angle) * 22, cy + Math.sin(angle) * 22);
+    ctx.stroke();
+  }
+
+  // Зрачок
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Блик на зрачке
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.beginPath();
+  ctx.arc(cx - 4, cy - 5, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Красный "луч" сверху
+  ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
+  ctx.beginPath();
+  ctx.moveTo(58, 14);
+  ctx.lineTo(70, 14);
+  ctx.lineTo(64, 26);
+  ctx.closePath();
+  ctx.fill();
+}
+</script>
 
 <!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div class="auth-screen" id="authScreen">
@@ -444,7 +897,7 @@
 <!-- МОДАЛКА ВЫПАДЕНИЯ -->
 <div class="modal-overlay" id="dropModal">
   <div class="modal">
-    <div class="modal-item-box" id="dropBox">?</div>
+    <div class="modal-item-box" id="dropBox"></div>
     <div class="modal-rarity" id="dropRarity">Обычный</div>
     <div class="modal-name" id="dropName">—</div>
     <div class="modal-desc" id="dropDesc">—</div>
@@ -455,7 +908,7 @@
 <!-- МОДАЛКА ПРЕДМЕТА -->
 <div class="modal-overlay" id="itemModal">
   <div class="modal">
-    <div class="modal-item-box" id="itemBox">?</div>
+    <div class="modal-item-box" id="itemBox"></div>
     <div class="modal-rarity" id="itemRarity">Обычный</div>
     <div class="modal-name" id="itemName">—</div>
     <div class="modal-desc" id="itemDesc">—</div>
@@ -485,8 +938,7 @@
 let state = {
   user: null,
   gameData: null,
-  currentItemId: null,
-  leaderboardLoaded: false
+  currentItemId: null
 };
 
 /* ==================== API ==================== */
@@ -500,6 +952,13 @@ async function api(path, options = {}) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
   return data;
+}
+
+/* ==================== ХЕЛПЕР: создать canvas предмета ==================== */
+function createItemCanvas(itemId) {
+  const canvas = document.createElement('canvas');
+  drawItem(canvas, itemId);
+  return canvas;
 }
 
 /* ==================== АВТОРИЗАЦИЯ ==================== */
@@ -553,7 +1012,6 @@ async function doLogout() {
   location.reload();
 }
 
-/* ==================== ИГРОВЫЕ ДАННЫЕ ==================== */
 async function loadGameData() {
   state.gameData = await api('/api/game-data');
 }
@@ -568,9 +1026,6 @@ function updateUI() {
 
   renderCrates();
   renderInventory();
-
-  // Сбрасываем кэш лидерборда — при следующем заходе перезагрузится
-  state.leaderboardLoaded = false;
 }
 
 function renderCrates() {
@@ -610,14 +1065,24 @@ function renderInventory() {
   const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
   entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
 
-  grid.innerHTML = entries.map(([id, count]) => {
+  // Собираем HTML, потом заменим плейсхолдеры на canvas
+  const html = entries.map(([id, count]) => {
     const item = ITEMS[id];
     return `
-      <div class="item-slot bg-${item.rarity}" onclick="showItem('${id}')">
+      <div class="item-slot bg-${item.rarity}" data-item-id="${id}" onclick="showItem('${id}')">
         ${count > 1 ? `<div class="count-badge">×${count}</div>` : ''}
-        <div class="item-text">${item.display}</div>
+        <div class="canvas-holder" data-item="${id}"></div>
       </div>`;
   }).join('');
+
+  grid.innerHTML = html;
+
+  // Вставляем canvas в каждый слот
+  grid.querySelectorAll('.canvas-holder').forEach(holder => {
+    const itemId = holder.dataset.item;
+    const canvas = createItemCanvas(itemId);
+    holder.appendChild(canvas);
+  });
 }
 
 /* ==================== ДЕЙСТВИЯ ==================== */
@@ -673,7 +1138,8 @@ function showDrop(item) {
   const r = state.gameData.RARITIES[item.rarity];
   const box = document.getElementById('dropBox');
   box.className = 'modal-item-box bg-' + item.rarity;
-  box.textContent = item.display;
+  box.innerHTML = '';
+  box.appendChild(createItemCanvas(item.id));
 
   const rarityEl = document.getElementById('dropRarity');
   rarityEl.textContent = r.name;
@@ -695,7 +1161,8 @@ function showItem(id) {
 
   const box = document.getElementById('itemBox');
   box.className = 'modal-item-box bg-' + item.rarity;
-  box.textContent = item.display;
+  box.innerHTML = '';
+  box.appendChild(createItemCanvas(id));
 
   const rarityEl = document.getElementById('itemRarity');
   rarityEl.textContent = r.name;
@@ -730,17 +1197,14 @@ async function sellCurrentItem() {
     state.user = data.user;
     updateUI();
 
-    // Обновляем данные в модалке
     const left = state.user.inventory[id] || 0;
     if (left === 0) {
       closeItem();
     } else {
       document.getElementById('itemCount').textContent = '×' + left;
-      const sellBtn = document.getElementById('itemSellBtn');
-      sellBtn.disabled = false;
+      document.getElementById('itemSellBtn').disabled = false;
     }
 
-    // Показываем эффект +X монет
     const reward = document.createElement('div');
     reward.className = 'float-coin';
     reward.textContent = '+' + item.value;
@@ -748,7 +1212,6 @@ async function sellCurrentItem() {
     reward.style.top = window.innerHeight / 2 + 'px';
     document.body.appendChild(reward);
     setTimeout(() => reward.remove(), 900);
-
   } catch (e) {
     alert(e.message);
   }
@@ -774,12 +1237,13 @@ function showCrateInfo(crateId) {
     return order[ITEMS[a.item].rarity] - order[ITEMS[b.item].rarity];
   });
 
+  // Строим HTML с плейсхолдерами
   document.getElementById('cmDropList').innerHTML = sorted.map(drop => {
     const item = ITEMS[drop.item];
     const r = RARITIES[item.rarity];
     return `
       <div class="drop-row">
-        <div class="drop-icon bg-${item.rarity}">${item.display}</div>
+        <div class="drop-icon bg-${item.rarity}" data-item="${item.id}"></div>
         <div class="drop-info">
           <div class="drop-name">${item.name}</div>
           <div class="drop-rarity t-${item.rarity}">${r.name}</div>
@@ -790,6 +1254,13 @@ function showCrateInfo(crateId) {
         </div>
       </div>`;
   }).join('');
+
+  // Вставляем canvas в каждый .drop-icon
+  document.querySelectorAll('#cmDropList .drop-icon').forEach(icon => {
+    const itemId = icon.dataset.item;
+    const canvas = createItemCanvas(itemId);
+    icon.appendChild(canvas);
+  });
 
   const openBtn = document.getElementById('cmOpenBtn');
   openBtn.textContent = `Открыть за ${crate.price} 🪙`;
@@ -834,8 +1305,6 @@ async function loadLeaderboard() {
           <div class="lb-value">${p.totalValue.toLocaleString('ru')} 🪙</div>
         </div>`;
     }).join('');
-
-    state.leaderboardLoaded = true;
   } catch (e) {
     list.innerHTML = `<div class="lb-empty">Не удалось загрузить 😢<br>${e.message}</div>`;
   }
@@ -853,10 +1322,8 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     tab.classList.add('active');
-    const viewId = 'view-' + tab.dataset.view;
-    document.getElementById(viewId).classList.add('active');
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
 
-    // При заходе на вкладку "Топ" — загружаем лидерборд
     if (tab.dataset.view === 'top') {
       loadLeaderboard();
     }
