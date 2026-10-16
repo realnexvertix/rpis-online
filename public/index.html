@@ -79,7 +79,6 @@
     font-weight: 700; font-size: 16px; color: #fbbf24;
   }
 
-  /* МАГАЗИН */
   .crate-list { display: flex; flex-direction: column; gap: 14px; }
   .crate-card {
     background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
@@ -126,7 +125,6 @@
   }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.6); }
 
-  /* КЛИКЕР */
   .clicker-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 10px 0; }
   .clicker-info { text-align: center; font-size: 14px; color: #8888a8; line-height: 1.6; }
   .clicker-info b { color: #fbbf24; font-size: 16px; }
@@ -153,7 +151,6 @@
     100% { opacity: 0; transform: translate(-50%, -90px) scale(1.4); }
   }
 
-  /* ИНВЕНТАРЬ */
   .inv-header { display: flex; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
   .inv-title { font-size: 16px; font-weight: 700; }
   .inv-count { font-size: 13px; color: #7a7a9a; }
@@ -182,7 +179,6 @@
   .empty-inv { grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #55557a; font-size: 14px; }
   .empty-inv .big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
 
-  /* ТОП */
   .lb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 2px; }
   .lb-title { font-size: 16px; font-weight: 700; }
   .lb-sub { font-size: 12px; color: #7a7a9a; }
@@ -210,7 +206,6 @@
   .lb-value { font-size: 15px; font-weight: 800; color: #fbbf24; flex-shrink: 0; }
   .lb-loading, .lb-empty { text-align: center; padding: 40px 20px; color: #55557a; font-size: 14px; }
 
-  /* ТРЕЙДЫ */
   .trade-search { display: flex; gap: 8px; margin-bottom: 16px; }
   .trade-search input {
     flex: 1; padding: 14px;
@@ -264,7 +259,6 @@
     cursor: not-allowed;
   }
 
-  /* МОДАЛКА ТРЕЙДА */
   .trade-modal {
     max-width: 460px; width: 100%;
     max-height: 90vh; overflow-y: auto;
@@ -359,7 +353,6 @@
   .trade-status.yes { color: #4ade80; font-weight: 700; }
   .trade-status.warn { color: #fbbf24; font-weight: 700; }
 
-  /* ВСПЛЫВАШКА ЗАПРОСА */
   .req-popup {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: linear-gradient(160deg, #1e1e32, #14141f);
@@ -388,7 +381,6 @@
   .btn-accept { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
   .btn-decline { background: rgba(239,68,68,0.2); color: #f87171; }
 
-  /* МОДАЛКИ ОБЩИЕ */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
     display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
@@ -442,7 +434,6 @@
   .detail-label { color: #7a7a9a; }
   .detail-value { font-weight: 700; }
 
-  /* АВТОРИЗАЦИЯ */
   .auth-screen {
     position: fixed; inset: 0; background: radial-gradient(circle at 50% 30%, #1a1a2e, #000);
     display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px;
@@ -485,7 +476,6 @@
   .auth-submit:active { transform: scale(0.98); }
   .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* МОДАЛКА ЯЩИКА */
   .crate-modal {
     max-width: 420px; max-height: 85vh; overflow-y: auto;
     padding: 24px 20px; text-align: left;
@@ -539,7 +529,6 @@
   }
   .crate-modal .btn-close-modal:active { transform: scale(0.97); }
 
-  /* ==================== АДАПТИВ ПОД ТЕЛЕФОН ==================== */
   @media (max-width: 480px) {
     .app { padding: 12px 12px 90px; }
     h1 { font-size: 18px; }
@@ -564,7 +553,6 @@
     .trade-my-inv .trade-inv-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
-  /* ==================== ПЛАНШЕТ ==================== */
   @media (min-width: 768px) {
     .app { max-width: 640px; padding: 24px 24px 100px; }
     h1 { font-size: 28px; }
@@ -586,7 +574,6 @@
     .app { max-width: 720px; }
   }
 
-  /* Отключаем hover-эффекты на тач-устройствах */
   @media (hover: none) {
     .crate-card:hover { border-color: rgba(255,255,255,0.1); }
     .item-slot:hover { filter: none; }
@@ -598,7 +585,6 @@
 </style>
 </head><body>
 
-<!-- ============ РИСОВАЛКИ ПРЕДМЕТОВ ============ -->
 <script>
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -754,25 +740,21 @@ function drawAIQuantum(ctx) {
   const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 55);
   glow.addColorStop(0, 'rgba(251,191,36,0.55)'); glow.addColorStop(1, 'rgba(251,191,36,0)');
   ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, 55, 0, Math.PI * 2); ctx.fill();
-
   const topGrad = ctx.createLinearGradient(0, 30, 0, 55);
   topGrad.addColorStop(0, '#fef3c7'); topGrad.addColorStop(1, '#fbbf24');
   ctx.fillStyle = topGrad;
   ctx.beginPath(); ctx.moveTo(64, 26); ctx.lineTo(96, 44); ctx.lineTo(64, 62); ctx.lineTo(32, 44); ctx.closePath(); ctx.fill();
   ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
-
   const leftGrad = ctx.createLinearGradient(0, 62, 0, 100);
   leftGrad.addColorStop(0, '#f59e0b'); leftGrad.addColorStop(1, '#b45309');
   ctx.fillStyle = leftGrad;
   ctx.beginPath(); ctx.moveTo(32, 44); ctx.lineTo(64, 62); ctx.lineTo(64, 100); ctx.lineTo(32, 82); ctx.closePath(); ctx.fill();
   ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
-
   const rightGrad = ctx.createLinearGradient(0, 62, 0, 100);
   rightGrad.addColorStop(0, '#d97706'); rightGrad.addColorStop(1, '#78350f');
   ctx.fillStyle = rightGrad;
   ctx.beginPath(); ctx.moveTo(96, 44); ctx.lineTo(96, 82); ctx.lineTo(64, 100); ctx.lineTo(64, 62); ctx.closePath(); ctx.fill();
   ctx.strokeStyle = '#92400e'; ctx.lineWidth = 2.5; ctx.stroke();
-
   ctx.fillStyle = '#fff';
   ctx.shadowColor = 'rgba(255,255,255,0.8)'; ctx.shadowBlur = 6;
   ctx.beginPath();
@@ -786,7 +768,6 @@ function drawAIEye(ctx) {
   const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 60);
   glow.addColorStop(0, 'rgba(239,68,68,0.7)'); glow.addColorStop(1, 'rgba(239,68,68,0)');
   ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, 60, 0, Math.PI * 2); ctx.fill();
-
   ctx.fillStyle = '#fff';
   ctx.beginPath();
   ctx.moveTo(14, 64);
@@ -794,12 +775,10 @@ function drawAIEye(ctx) {
   ctx.quadraticCurveTo(64, 112, 14, 64);
   ctx.closePath(); ctx.fill();
   ctx.strokeStyle = '#7f1d1d'; ctx.lineWidth = 3; ctx.stroke();
-
   const irisGrad = ctx.createRadialGradient(cx - 4, cy - 4, 3, cx, cy, 24);
   irisGrad.addColorStop(0, '#fca5a5'); irisGrad.addColorStop(0.5, '#ef4444'); irisGrad.addColorStop(1, '#7f1d1d');
   ctx.fillStyle = irisGrad;
   ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI * 2); ctx.fill();
-
   ctx.strokeStyle = 'rgba(127,29,29,0.6)'; ctx.lineWidth = 1.5;
   for (let i = 0; i < 16; i++) {
     const a = (i / 16) * Math.PI * 2;
@@ -812,13 +791,11 @@ function drawAIEye(ctx) {
   ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.9)';
   ctx.beginPath(); ctx.arc(cx - 4, cy - 5, 3, 0, Math.PI * 2); ctx.fill();
-
   ctx.fillStyle = 'rgba(239,68,68,0.7)';
   ctx.beginPath(); ctx.moveTo(58, 14); ctx.lineTo(70, 14); ctx.lineTo(64, 26); ctx.closePath(); ctx.fill();
 }
 </script>
 
-<!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
     <h2>Рандомные предметы слабоумия</h2>
@@ -834,7 +811,6 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
-<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
 <div class="app" id="app" style="display:none">
   <button class="fs-btn" onclick="toggleFullscreen()">⛶</button>
 
@@ -884,7 +860,7 @@ function drawAIEye(ctx) {
       <button id="tradeSearchBtn" onclick="searchPlayer()">🔍</button>
     </div>
     <div id="tradeSearchResult"></div>
-    <div class="trade-section-title">🟢 Сейчас в сети</div>
+    <div class="trade-section-title">👥 Все игроки</div>
     <div id="tradeOnlineList">
       <div class="lb-loading">Загрузка...</div>
     </div>
@@ -901,7 +877,6 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
-<!-- МОДАЛКА ВЫПАДЕНИЯ -->
 <div class="modal-overlay" id="dropModal">
   <div class="modal">
     <div class="modal-item-box" id="dropBox"></div>
@@ -912,7 +887,6 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
-<!-- МОДАЛКА ПРЕДМЕТА -->
 <div class="modal-overlay" id="itemModal">
   <div class="modal">
     <div class="modal-item-box" id="itemBox"></div>
@@ -926,7 +900,6 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
-<!-- МОДАЛКА ЯЩИКА -->
 <div class="modal-overlay" id="crateModal">
   <div class="modal crate-modal">
     <div class="crate-modal-visual" id="cmVisual">📦</div>
@@ -940,7 +913,6 @@ function drawAIEye(ctx) {
   </div>
 </div>
 
-<!-- МОДАЛКА ТРЕЙДА -->
 <div class="modal-overlay" id="tradeModal">
   <div class="modal trade-modal">
     <div class="trade-modal-head">
@@ -970,37 +942,26 @@ function drawAIEye(ctx) {
 </div>
 
 <script>
-/* ==================== ОПРЕДЕЛЕНИЕ УСТРОЙСТВА ==================== */
 function detectDevice() {
   const w = window.innerWidth;
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
   document.body.classList.remove('mobile', 'tablet', 'desktop');
-
-  if (w < 768) {
-    document.body.classList.add('mobile');
-  } else if (w < 1024) {
-    document.body.classList.add('tablet');
-  } else {
-    document.body.classList.add('desktop');
-  }
-
+  if (w < 768) document.body.classList.add('mobile');
+  else if (w < 1024) document.body.classList.add('tablet');
+  else document.body.classList.add('desktop');
   if (isTouch) document.body.classList.add('touch');
   else document.body.classList.add('no-touch');
 }
-
 detectDevice();
 window.addEventListener('resize', detectDevice);
 window.addEventListener('orientationchange', () => setTimeout(detectDevice, 100));
 
-/* ==================== СОСТОЯНИЕ ==================== */
 let state = {
   user: null,
   gameData: null,
   currentItemId: null
 };
 
-/* ==================== API ==================== */
 async function api(path, options = {}) {
   const res = await fetch(path, {
     credentials: 'include',
@@ -1019,7 +980,6 @@ function createItemCanvas(itemId) {
   return canvas;
 }
 
-/* ==================== АВТОРИЗАЦИЯ ==================== */
 let authMode = 'login';
 
 document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -1041,10 +1001,8 @@ async function doAuth() {
   const pass = document.getElementById('authPass').value;
   const errEl = document.getElementById('authError');
   const btn = document.getElementById('authSubmit');
-
   errEl.textContent = '';
   if (!name || !pass) { errEl.textContent = 'Заполни оба поля'; return; }
-
   btn.disabled = true;
   try {
     const path = authMode === 'login' ? '/api/login' : '/api/register';
@@ -1076,7 +1034,6 @@ async function loadGameData() {
   state.gameData = await api('/api/game-data');
 }
 
-/* ==================== UI ==================== */
 function updateUI() {
   const u = state.user;
   document.getElementById('username').textContent = u.username;
@@ -1113,7 +1070,6 @@ function renderInventory() {
   const entries = Object.entries(inv);
   const total = entries.reduce((s, [, c]) => s + c, 0);
   document.getElementById('invCount').textContent = `${total} шт.`;
-
   if (entries.length === 0) {
     grid.innerHTML = `<div class="empty-inv"><div class="big">🕳️</div>Пока пусто.<br>Открой ящик!</div>`;
     return;
@@ -1121,7 +1077,6 @@ function renderInventory() {
   const { ITEMS } = state.gameData;
   const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
   entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
-
   grid.innerHTML = entries.map(([id, count]) => {
     const item = ITEMS[id];
     return `
@@ -1130,13 +1085,11 @@ function renderInventory() {
         <div class="canvas-holder" data-item="${id}"></div>
       </div>`;
   }).join('');
-
   grid.querySelectorAll('.canvas-holder').forEach(holder => {
     holder.appendChild(createItemCanvas(holder.dataset.item));
   });
 }
 
-/* ==================== ДЕЙСТВИЯ ==================== */
 async function openCrate(crateId) {
   try {
     const data = await api('/api/open-crate', { method: 'POST', body: { crateId } });
@@ -1182,7 +1135,6 @@ function spawnFloatCoin(e) {
   setTimeout(() => el.remove(), 900);
 }
 
-/* ==================== МОДАЛКИ ПРЕДМЕТОВ ==================== */
 function showDrop(item) {
   const r = state.gameData.RARITIES[item.rarity];
   const box = document.getElementById('dropBox');
@@ -1250,7 +1202,6 @@ async function sellCurrentItem() {
   } catch (e) { alert(e.message); }
 }
 
-/* ==================== МОДАЛКА ЯЩИКА ==================== */
 function showCrateInfo(crateId) {
   const crate = state.gameData.CRATES[crateId];
   if (!crate) return;
@@ -1292,7 +1243,6 @@ function showCrateInfo(crateId) {
 
 function closeCrateModal() { document.getElementById('crateModal').classList.remove('show'); }
 
-/* ==================== ТОП ИГРОКОВ ==================== */
 async function loadLeaderboard() {
   const list = document.getElementById('lbList');
   list.innerHTML = `<div class="lb-loading">Загрузка...</div>`;
@@ -1321,28 +1271,16 @@ async function loadLeaderboard() {
   }
 }
 </script><script>
-/* ==================== SOCKET.IO ==================== */
 let socket = null;
 let pendingRequest = null;
 
 function initSocket() {
   socket = io();
 
-  socket.on('connect', () => {
-    console.log('🔌 Socket подключён:', socket.id);
-  });
-
-  socket.on('connect_error', (err) => {
-    console.warn('❌ Socket ошибка:', err.message);
-  });
-
-  socket.on('auth-ok', (data) => {
-    console.log('✅ Socket авторизован как', data.username);
-  });
-
-  socket.on('auth-error', (data) => {
-    console.warn('❌ Socket auth:', data.error);
-  });
+  socket.on('connect', () => console.log('🔌 Socket подключён:', socket.id));
+  socket.on('connect_error', (err) => console.warn('❌ Socket ошибка:', err.message));
+  socket.on('auth-ok', (data) => console.log('✅ Socket авторизован как', data.username));
+  socket.on('auth-error', (data) => console.warn('❌ Socket auth:', data.error));
 
   socket.on('online-changed', () => {
     if (document.getElementById('view-trade').classList.contains('active')) {
@@ -1391,24 +1329,29 @@ function initSocket() {
   });
 }
 
-/* ==================== ТРЕЙДЫ — UI ==================== */
 async function loadOnlinePlayers() {
   const list = document.getElementById('tradeOnlineList');
   try {
     const data = await api('/api/online-players');
     if (!data.players.length) {
-      list.innerHTML = `<div class="lb-empty">Никого нет онлайн 😴</div>`;
+      list.innerHTML = `<div class="lb-empty">Пока никто не зарегистрировался 😴<br>Позови друзей!</div>`;
       return;
     }
-    list.innerHTML = data.players.map(p => `
-      <div class="player-row">
-        <div class="online-dot"></div>
-        <div class="player-name">${p.username}</div>
-        <button class="trade-btn" onclick="requestTrade(${p.id}, '${p.username.replace(/'/g, "\\'")}')">
-          Трейд
-        </button>
-      </div>
-    `).join('');
+    list.innerHTML = data.players.map(p => {
+      const online = p.online;
+      const dot = online ? '' : 'offline';
+      const status = online ? '(в сети)' : '(не в сети)';
+      const btn = online
+        ? `<button class="trade-btn" onclick="requestTrade(${p.id}, '${p.username.replace(/'/g, "\\'")}')">Трейд</button>`
+        : `<button class="trade-btn" disabled>Оффлайн</button>`;
+      return `
+        <div class="player-row">
+          <div class="online-dot ${dot}"></div>
+          <div class="player-name">${p.username} <span style="color:#7a7a9a;font-size:12px">${status}</span></div>
+          ${btn}
+        </div>
+      `;
+    }).join('');
   } catch (e) {
     list.innerHTML = `<div class="lb-empty">Ошибка: ${e.message}</div>`;
   }
@@ -1419,7 +1362,6 @@ async function searchPlayer() {
   const name = input.value.trim();
   const result = document.getElementById('tradeSearchResult');
   if (!name) { result.innerHTML = ''; return; }
-
   const btn = document.getElementById('tradeSearchBtn');
   btn.disabled = true;
   try {
@@ -1474,20 +1416,15 @@ function respondTrade(accept) {
   pendingRequest = null;
 }
 
-/* ==================== ОКНО ТРЕЙДА ==================== */
 function renderTradeModal() {
   const trade = state.currentTrade;
   if (!trade) return;
-
   document.getElementById('tradeSubtitle').textContent = `Ты ↔ ${trade.other.name}`;
   document.getElementById('tradeMineTitle').textContent = `🟢 Ты (${trade.me.name})`;
   document.getElementById('tradeOtherTitle').textContent = `🔴 ${trade.other.name}`;
-
   renderTradeItemsList('tradeMineItems', trade.me.items, true);
   renderTradeItemsList('tradeOtherItems', trade.other.items, false);
-
   renderTradeInventoryGrid();
-
   const status = document.getElementById('tradeStatus');
   if (trade.me.confirmed && trade.other.confirmed) {
     status.textContent = '✅ Обмен...';
@@ -1502,7 +1439,6 @@ function renderTradeModal() {
     status.textContent = 'Выбери предметы из инвентаря ниже';
     status.className = 'trade-status';
   }
-
   const confirmBtn = document.getElementById('tradeConfirmBtn');
   if (trade.me.confirmed) {
     confirmBtn.textContent = '✅ Подтверждено';
@@ -1532,7 +1468,6 @@ function renderTradeItemsList(containerId, items, isMine) {
         <div class="trade-item-count">×${count}</div>
       </div>`;
   }).join('');
-
   container.querySelectorAll('.trade-item-icon').forEach(el => {
     el.appendChild(createItemCanvas(el.dataset.item));
   });
@@ -1543,16 +1478,13 @@ function renderTradeInventoryGrid() {
   const trade = state.currentTrade;
   const inv = state.user.inventory;
   const entries = Object.entries(inv);
-
   if (!entries.length) {
     grid.innerHTML = `<div class="trade-empty" style="grid-column:1/-1">Инвентарь пуст</div>`;
     return;
   }
-
   const { ITEMS } = state.gameData;
   const order = { mythic: 0, legendary: 1, rare: 2, uncommon: 3, common: 4 };
   entries.sort((a, b) => order[ITEMS[a[0]].rarity] - order[ITEMS[b[0]].rarity]);
-
   grid.innerHTML = entries.map(([id, count]) => {
     const item = ITEMS[id];
     const added = trade.me.items[id] || 0;
@@ -1566,7 +1498,6 @@ function renderTradeInventoryGrid() {
         <div class="slot-canvas" data-item="${id}"></div>
       </div>`;
   }).join('');
-
   grid.querySelectorAll('.slot-canvas').forEach(el => {
     el.appendChild(createItemCanvas(el.dataset.item));
   });
@@ -1608,26 +1539,22 @@ function closeTradeModal() {
   state.currentTrade = null;
 }
 </script><script>
-/* ==================== ПОЛНЫЙ ЭКРАН ==================== */
 function toggleFullscreen() {
   if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
   else document.exitFullscreen?.();
 }
 
-/* ==================== ВКЛАДКИ ==================== */
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('view-' + tab.dataset.view).classList.add('active');
-
     if (tab.dataset.view === 'top') loadLeaderboard();
     if (tab.dataset.view === 'trade') loadOnlinePlayers();
   });
 });
 
-/* ==================== КНОПКА КЛИКА ==================== */
 const clickBtn = document.getElementById('clickBtn');
 clickBtn.addEventListener('click', handleClick);
 clickBtn.addEventListener('touchstart', (e) => {
@@ -1636,24 +1563,19 @@ clickBtn.addEventListener('touchstart', (e) => {
   handleClick({ clientX: touch.clientX, clientY: touch.clientY });
 }, { passive: false });
 
-/* ==================== ЗАКРЫТИЕ МОДАЛОК ПО ФОНУ ==================== */
 document.getElementById('crateModal').addEventListener('click', (e) => {
   if (e.target.id === 'crateModal') closeCrateModal();
 });
-
 document.getElementById('itemModal').addEventListener('click', (e) => {
   if (e.target.id === 'itemModal') closeItem();
 });
-
 document.getElementById('tradeModal').addEventListener('click', (e) => {
   if (e.target.id === 'tradeModal') cancelTrade();
 });
-
 document.getElementById('dropModal').addEventListener('click', (e) => {
   if (e.target.id === 'dropModal') closeDrop();
 });
 
-/* ==================== ЗАПРЕТ ЗУМА ДВОЙНЫМ ТАПОМ ==================== */
 let lastTouchEnd = 0;
 document.addEventListener('touchend', (e) => {
   const now = Date.now();
@@ -1661,14 +1583,13 @@ document.addEventListener('touchend', (e) => {
   lastTouchEnd = now;
 }, { passive: false });
 
-/* ==================== СТАРТ ==================== */
 (async () => {
   try {
     const data = await api('/api/me');
     state.user = data.user;
     onLoggedIn();
   } catch {
-    // не залогинен — показываем экран входа
+    // не залогинен
   }
 })();
 </script>
