@@ -284,6 +284,8 @@ app.get('/api/leaderboard', auth, async (req, res) => {
   } catch (e) { console.error(e); res.status(500).json({ error: 'Ошибка сервера' }); }
 });
 
+/* ==================== ПОИСК ИГРОКА И ОНЛАЙН ==================== */
+
 app.get('/api/find-player/:username', auth, async (req, res) => {
   try {
     const name = req.params.username.trim();
@@ -294,23 +296,31 @@ app.get('/api/find-player/:username', auth, async (req, res) => {
   } catch (e) { console.error(e); res.status(500).json({ error: 'Ошибка сервера' }); }
 });
 
+// ✅ ПОКАЗЫВАЕМ ВСЕХ ИГРОКОВ (включая оффлайн)
 app.get('/api/online-players', auth, async (req, res) => {
   try {
-    const ids = [...onlineUsers.keys()].filter(id => id !== req.user.id);
-    if (!ids.length) return res.json({ players: [] });
     const { rows } = await pool.query(
-      'SELECT id, username FROM users WHERE id = ANY($1::int[])',
-      [ids]
+      'SELECT id, username FROM users WHERE id != $1 ORDER BY username ASC',
+      [req.user.id]
     );
-    res.json({ players: rows });
+    const players = rows.map(p => ({
+      id: p.id,
+      username: p.username,
+      online: onlineUsers.has(p.id)
+    }));
+    players.sort((a, b) => {
+      if (a.online !== b.online) return b.online - a.online;
+      return a.username.localeCompare(b.username);
+    });
+    res.json({ players });
   } catch (e) { console.error(e); res.status(500).json({ error: 'Ошибка сервера' }); }
 });
 
 /* ==================== SOCKET.IO — ТРЕЙДЫ ==================== */
 
-const onlineUsers = new Map();     // userId -> socketId
-const activeTrades = new Map();    // tradeId -> trade
-const pendingRequests = new Map(); // targetId -> { requestId, fromId, fromName }
+const onlineUsers = new Map();
+const activeTrades = new Map();
+const pendingRequests = new Map();
 
 const makeTradeId = () => 'tr_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 const makeRequestId = () => 'rq_' + Math.random().toString(36).slice(2, 10);
@@ -320,7 +330,6 @@ function emitTo(userId, event, data) {
   if (sid) io.to(sid).emit(event, data);
 }
 
-// ✅ ГЛАВНОЕ ИЗМЕНЕНИЕ: читаем cookie на handshake
 io.use((socket, next) => {
   try {
     const rawCookie = socket.handshake.headers.cookie || '';
@@ -344,7 +353,6 @@ io.use((socket, next) => {
 io.on('connection', async (socket) => {
   const currentUserId = socket.userId;
 
-  // Проверяем что юзер существует
   const { rows } = await pool.query('SELECT id, username FROM users WHERE id = $1', [currentUserId]);
   if (!rows[0]) return socket.disconnect();
   const myUsername = rows[0].username;
@@ -353,7 +361,6 @@ io.on('connection', async (socket) => {
   socket.emit('auth-ok', { username: myUsername });
   io.emit('online-changed', { players: [...onlineUsers.keys()] });
 
-  /* ----- ЗАПРОС НА ТРЕЙД ----- */
   socket.on('trade-request', async ({ targetId }) => {
     targetId = Number(targetId);
     if (targetId === currentUserId) return;
@@ -378,7 +385,6 @@ io.on('connection', async (socket) => {
     });
   });
 
-  /* ----- ОТВЕТ НА ЗАПРОС ----- */
   socket.on('trade-respond', async ({ requestId, accept }) => {
     const req = pendingRequests.get(currentUserId);
     if (!req || req.requestId !== requestId) return;
@@ -415,7 +421,6 @@ io.on('connection', async (socket) => {
     }
   });
 
-  /* ----- ДОБАВИТЬ ПРЕДМЕТ ----- */
   socket.on('trade-add-item', async ({ tradeId, itemId }) => {
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
@@ -432,7 +437,6 @@ io.on('connection', async (socket) => {
     await broadcastTrade(trade);
   });
 
-  /* ----- УБРАТЬ ПРЕДМЕТ ----- */
   socket.on('trade-remove-item', async ({ tradeId, itemId }) => {
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
@@ -449,7 +453,6 @@ io.on('connection', async (socket) => {
     await broadcastTrade(trade);
   });
 
-  /* ----- ПОДТВЕРДИТЬ ----- */
   socket.on('trade-confirm', async ({ tradeId }) => {
     const trade = activeTrades.get(tradeId);
     if (!trade || !trade.players[currentUserId]) return;
@@ -480,7 +483,6 @@ io.on('connection', async (socket) => {
     await broadcastTrade(trade);
   });
 
-  /* ----- ОТМЕНА ----- */
   socket.on('trade-cancel', ({ tradeId }) => {
     const trade = activeTrades.get(tradeId);
     if (!trade) return;
@@ -490,7 +492,6 @@ io.on('connection', async (socket) => {
     activeTrades.delete(tradeId);
   });
 
-  /* ----- ОТКЛЮЧЕНИЕ ----- */
   socket.on('disconnect', () => {
     onlineUsers.delete(currentUserId);
     pendingRequests.delete(currentUserId);
